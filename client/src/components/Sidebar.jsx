@@ -14,7 +14,7 @@ const Sidebar = (props) => {
         </div>
     
         <div className="w-full p-3">
-            <ul className="flex flex-col gap-3">
+            <ul className={`flex flex-col gap-3 ${props.menuOpen ? "items-center" : "items-start"}`}>
                 <li>
                     <a href="" className="inline-flex items-center gap-3">
                         <span className="text-xl md:text-2xl"><AiOutlineDashboard /></span>
