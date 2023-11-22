@@ -122,7 +122,7 @@ const Dashboard = () => {
                                     Sunoto
                                 </td>
                                 <td class="px-6 py-4">
-                                    Laptop
+                                    Laki-laki
                                 </td>
                                 <td class="px-6 py-4">
                                     12345
@@ -145,7 +145,7 @@ const Dashboard = () => {
                                     Sunoto
                                 </td>
                                 <td class="px-6 py-4">
-                                    Laptop
+                                    Laki-laki
                                 </td>
                                 <td class="px-6 py-4">
                                     12345
