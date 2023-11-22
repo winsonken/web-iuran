@@ -6,9 +6,7 @@ import Layout from '../Layout/Layout'
 const Home = () => {
   return (
     <Layout>
-        <div className="bg-blue-200 w-full h-[450px]">
-            <div>lol</div>
-        </div>
+        <div>lol</div>
     </Layout>
   )
 }

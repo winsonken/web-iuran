@@ -9,7 +9,11 @@ export default {
       screens: {
         'xs': '480px',
         'sm': '640px',
-      }
+      },
+      colors: {
+        'side-text' : '#7C7B84',
+        'main-orange': '#FF9130'
+      },
     },
   },
   plugins: [],

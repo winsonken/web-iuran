@@ -1,13 +1,16 @@
 import React from 'react'
 import { FaRegUserCircle } from "react-icons/fa";
-
+import { FaChevronDown } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
+import { RxChevronDown } from "react-icons/rx";
 const Navbar = (props) => {
   return (
-    <div className={`bg-blue-100 p-3 flex justify-end fixed right-0 duration-300 ${props.menuOpen ? "w-full" : "w-[calc(100%-50px)]"}`}>
+    <div className={`bg-[#FFFFFF] p-3 flex justify-end fixed right-0 border-b-2 border-[#E8E8E8] duration-300 ${props.menuOpen ? "w-full" : "w-[calc(100%-50px)] md:w-full"}`}>
 
         <div className="flex justify-center items-center gap-2 cursor-pointer">
-            <FaRegUserCircle className="text-xl md:text-2xl" />
-            <p className="text-base md:text-lg">Username</p>
+            <FaUserCircle className="text-xl md:text-2xl text-main-orange" />
+            <p className="text-base font-medium hidden xs:block">Username</p>
+            <RxChevronDown className="text-sm md:text-base" />
         </div>
     </div>
   )
