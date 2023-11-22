@@ -3,6 +3,7 @@ import { AiOutlineDashboard } from "react-icons/ai";
 import { IoPeople } from "react-icons/io5";
 import { IoDocumentText } from "react-icons/io5";
 import { RxHamburgerMenu } from 'react-icons/rx'
+import { GiPayMoney } from "react-icons/gi";
 import { Link } from 'react-router-dom';
 
 const sideMenu = [
@@ -19,7 +20,7 @@ const sideMenu = [
     {
         "name": "Pengeluaran",
         "link": "/pengeluaran",
-        "icon": <IoPeople />
+        "icon": <GiPayMoney />
     },
     {
         "name": "Data petugas",

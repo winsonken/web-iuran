@@ -3,6 +3,8 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { RxChevronDown } from "react-icons/rx";
+import { GiPayMoney } from "react-icons/gi";
+
 const Navbar = (props) => {
   return (
     <div className={`bg-[#FFFFFF] p-3 flex justify-end fixed right-0 border-b-2 border-[#E8E8E8] duration-300 ${props.menuOpen ? "w-full" : "w-[calc(100%-50px)] md:w-full"}`}>
