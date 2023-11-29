@@ -74,8 +74,8 @@ const Iuran = () => {
                                         <td className="whitespace-nowrap px-3 py-3">Rp. 0</td>
                                         <td className="whitespace-nowrap px-3 py-3 ">
                                             <Link to="/iuran">
-                                                <div className="bg-[#DCFDD4] text-[#4FAC16] w-fit px-5 py-1 rounded-full cursor-pointer m-auto">
-                                                    <p className="text-xs">Lihat detail</p>
+                                                <div className="bg-[#DCFDD4] text-[#4FAC16] w-fit px-5 py-1 rounded-full m-auto">
+                                                    <p className="text-xs">Lunas</p>
                                                 </div>
                                             </Link>
                                         </td>

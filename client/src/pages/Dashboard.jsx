@@ -83,7 +83,7 @@ const Dashboard = () => {
                                         <td className="whitespace-nowrap px-3 py-3 ">123456789</td>
                                         <td className="whitespace-nowrap px-3 py-3 ">Batam</td>
                                         <td className="whitespace-nowrap px-3 py-3 ">
-                                            <div className="bg-[#FDD4D4] text-[#AC1616] w-fit px-5 py-1 rounded-full cursor-pointer m-auto">
+                                            <div className="bg-[#FDD4D4] text-[#AC1616] w-fit px-5 py-1 rounded-full m-auto">
                                                 <p className="text-xs">Belum lunas</p>
                                             </div>
                                         </td>
