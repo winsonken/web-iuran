@@ -8,7 +8,7 @@ const Dashboard = () => {
     <Layout>
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">
-                <h1 className="text-xl text-[#222222] font-medium">Admin dashboard</h1>
+                <h1 className="text-xl text-[#222222] font-medium">astafirullahallazim Admin dashboard</h1>
 
                 <div className="flex gap-3 justify-center lg:justify-between flex-wrap w-full h-100">
                     <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-0">
