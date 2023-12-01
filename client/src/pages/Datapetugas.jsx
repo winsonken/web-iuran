@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef  } from 'react'
+import axios from 'axios';
+import $ from 'jquery';
+import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
+import 'datatables.net'; // Import DataTables
 import Layout from '../Layout/Layout'
 import ModalForm from '../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import moment from 'moment';
+import {Link} from 'react-router-dom'
 
 
 const Datapetugas = () => {
@@ -12,19 +18,94 @@ const Datapetugas = () => {
     const [showModal, setShowModal] = useState(false);
     // Set Modal Type
     const [modal, setModal] = useState("");
-    const [namaPetugas, setNamaPetugas] = useState("");
+    const [nama, setNama] = useState("");
     const [jenisKelamin, setJenisKelamin] = useState("");
-    const [nik, setNik] = useState("");
+    const [nik, setNIK] = useState("");
+    const [pass, setPass] = useState("");
+    const [gender, setGender] = useState("");
     const [kk, setKK] = useState("");
     const [alamat, setAlamat] = useState("");
     const [status, setStatus] = useState("");
+    const [id, setId] = useState('')
+    const [petugas, setPetugas] = useState([]);
+    const tableRef = useRef(null);
+
+    useEffect(() => {
+        let counter = 1;
+        // Initialize DataTables after data is loaded
+        if (tableRef.current) {
+            $(tableRef.current).DataTable({
+                destroy: true, // Destroy any existing DataTable instance
+                data: petugas,
+                columns: [
+                    { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                        return counter++;
+                    } },
+                    { title: 'Nama Petugas', data: 'Nama'},
+                    { title: 'No NIK', data: 'NIK' },
+                    { title: 'Jenis Kelamin', data: 'Gender'},
+                    { title: 'Status', data: 'Status'},
+                    {
+                        title: 'Action',
+                        render: function (data, type, row, meta) {
+                            console.log("Row Data:", row); // Log the entire row to inspect its structure
+                            const id = row && row.ID; // Check if row is defined before accessing ID
+                            const pass = row && row.Password; // Check if row is defined before accessing ID
+                            const nik = row && row.NIK; // Check if row is defined before accessing ID
+                            const nama = row && row.Nama; // Check if row is defined before accessing ID
+                            const gender = row && row.Gender; // Check if row is defined before accessing ID
+                            const status = row && row.Status; // Check if row is defined before accessing ID
+                            console.log("ID:", id); // Log the extracted ID
+                            return `
+                                <button data-id=${id} data-nama=${nama} data-nik=${nik} data-gender=${gender} data-status=${status} data-pass=${pass}">Update</button>
+                                <button class='btn btn-danger delete-button' data-id=${id} >Delete</button>
+                            `;
+                        },
+                    },
+                ],
+            });
+            $(tableRef.current).on('click', '.delete-button', function() {
+                const id = $(this).data('id');
+                handleDelete(id);
+            });
+            $(tableRef.current).on('click', '.update-button', function() {
+                const e = $(this).data('id');
+                const j = $(this).data('pass')
+                const f = $(this).data('nama');
+                const g = $(this).data('nik');
+                const h = $(this).data('gender');
+                const i = $(this).data('status');
+                handleEditModal(e, f, g, h, i, j);
+            });
+        }
+    }, [petugas]);
+
+    useEffect(() => {
+        axios.get('http://localhost:8081/data-petugas')
+            .then(res => setPetugas(res.data))
+            .catch(err => console.log(err));
+    }, []);
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:8081/deletepetugas/${id}`);
+            window.location.reload();
+        } catch (err) {
+            console.error('Error in DELETE request:', err);
+        }
+    };
 
     const navigate = useNavigate();
     
-    function handleSubmit(e) {
-        e.preventDefault();
+    function handleSubmit(event) {
+        event.preventDefault();
         navigate("/data-petugas");
         setShowModal(!showModal);
+        axios.post('http://localhost:8081/data-petugas', {id, pass, nik, nama, gender, status})
+        .then(res => {
+            console.log(res);
+            window.location.reload();
+        }).catch(err => console.log(err));
     }
 
     function handleAddModal() {
@@ -57,14 +138,13 @@ const Datapetugas = () => {
                 <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
                     <div className="p-3">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table className="w-full min-w-full table-auto text-left border border-main-orange">
+                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example  ">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
                                         <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nama petugas</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Jenis kelamin</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">NIK</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">No. KK</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 ">No.NIK</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 ">Nama</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 ">Gender</th>
                                         <th scope="col" className="whitespace-nowrap px-3 ">Status</th>
                                         <th scope="col" className="whitespace-nowrap px-3 ">Aksi</th>
                                     </tr>
@@ -72,23 +152,7 @@ const Datapetugas = () => {
 
                                 <tbody className="font-medium text-xs text-center">
                                     <tr className="border border-b border-main-orange">
-                                        <td className="whitespace-nowrap px-2 py-3 ">1</td>
-                                        <td className="whitespace-nowrap px-3 py-3">Vincent</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">Laki-laki</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">123456789</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">123456789</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">
-                                            <div className="bg-[#DCFDD4] text-[#4FAC16] w-fit px-8 py-1 rounded-full m-auto">
-                                                <p className="text-xs">Aktif</p>
-                                            </div>
-                                        </td>
-                                        <td className="whitespace-nowrap px-3 py-3">
-                                            <div className="flex justify-center items-center text-2xl cursor-pointer gap-3">
-                                                <FaEdit className="text-yellow-500" onClick={handleEditModal} />
-                                                <MdDelete className="text-red-500" onClick={handleDeleteModal} />
-                                            </div>
                                         
-                                        </td>
                                     </tr>
                                     
                                     
@@ -107,36 +171,37 @@ const Datapetugas = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-5">
                             <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
-                                <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Nama</label>
-                                    <input type="text" id="nama-petugas" value={namaPetugas} placeholder="Input nama petugas" onChange={e => { setNamaPetugas(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                            <div className="flex flex-col gap-2 sm:w-44 grow  ">
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">ID</label>
+                                    <input type="text"  placeholder="Input ID petugas" required onChange={e => setId(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="kk" className="text-sm font-medium">No. KK</label>
-                                    <input type="number" id="kk" value={kk} placeholder="Input KK" onChange={e => { setKK(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Password</label>
+                                    <input type="password"  placeholder="Input Password petugas" required onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nik" className="text-sm font-medium">NIK</label>
-                                    <input type="number" id="nik" value={nik} placeholder="Input NIK" onChange={e => { setNik(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">NIK</label>
+                                    <input type="number" placeholder="Input NIK petugas" required onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                </div>
+
+                                <div className="flex flex-col gap-2 sm:w-44 grow  ">
+                                    <label htmlFor="nik" className="text-sm font-medium">Nama</label>
+                                    <input type="text" placeholder="Input Nama" required onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow ">
                                     <label htmlFor="jenis-kelamin" className="text-sm font-medium">Jenis kelamin</label>
-                                    <select name="jenis-kelamin" id="jenis-kelamin" onChange={e => { setJenisKelamin(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                        <option selected hidden>Pilih jenis kelamin</option>
-                                        <option value="laki-laki">Laki-laki</option>
-                                        <option value="perempuan">Perempuan</option>
+                                    <select type="text" required onChange={e => setGender(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
+                                    <option value="" disabled selected>Select Gender...</option>
+                                        <option value="Laki-laki">Laki-laki</option>
+                                        <option value="Perempuan">Perempuan</option>
                                     </select>
-                                </div>
-                                <div className="flex flex-col gap-2 sm:w-44 grow ">
-                                    <label htmlFor="alamat" className="text-sm font-medium">Alamat</label>
-                                    <input type="text" id="alamat" value={alamat} placeholder="Input alamat" onChange={e => { setAlamat(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow">
                                     <label htmlFor="status" className="text-sm font-medium">Status</label>
-                                    <select name="status" id="status" onChange={e => { setStatus(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                        <option selected hidden>Pilih status</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="tidak-aktif">Tidak aktif</option>
+                                    <select type="text" required onChange={e => setStatus(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
+                                    <option value="" disabled selected>Select Status...</option>
+                                        <option value="Active">Aktif</option>
+                                        <option value="Deactive">Tidak aktif</option>
                                     </select>
                                 </div>
                             </div>
@@ -157,7 +222,7 @@ const Datapetugas = () => {
                         <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">Nama</label>
-                                    <input type="text" id="nama-petugas" value={namaPetugas} placeholder="Input nama petugas" onChange={e => { setNamaPetugas(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="nama-petugas" value={nama} placeholder="Input nama petugas" onChange={e => { setNama(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="kk" className="text-sm font-medium">No. KK</label>
@@ -165,7 +230,7 @@ const Datapetugas = () => {
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nik" className="text-sm font-medium">NIK</label>
-                                    <input type="number" id="nik" value={nik} placeholder="Input NIK" onChange={e => { setNik(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" id="nik" value={nik} placeholder="Input NIK" onChange={e => { setNIK(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow ">
                                     <label htmlFor="jenis-kelamin" className="text-sm font-medium">Jenis kelamin</label>

@@ -1,14 +1,47 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Layout from '../Layout/Layout'
 import { IoPeople } from "react-icons/io5";
 import { FaMoneyCheck } from "react-icons/fa6";
 import { GiPayMoney } from "react-icons/gi";
+import axios from 'axios';
+import $ from 'jquery';
+import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
+import 'datatables.net'; // Import DataTables
+import moment from 'moment';
+
 const Dashboard = () => {
+    const [warga, setWarga] = useState([]);
+    const tableRef = useRef(null);
+
+    useEffect(() => {
+        let counter = 1;
+        // Initialize DataTables after data is loaded
+        if (tableRef.current) {
+            $(tableRef.current).DataTable({
+                destroy: true, // Destroy any existing DataTable instance
+                data: warga,
+                columns: [
+                    { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                        return counter++;
+                    } },
+                    { title: 'Nama Perwakilan', data: 'Nama'},
+                    { title: 'Status', data: 'Status'},
+                ],
+            });
+        }
+    }, [warga]);
+
+    useEffect(() => {
+        axios.get('http://localhost:8081/dashboard')
+            .then(res => setWarga(res.data))
+            .catch(err => console.log(err));
+    }, []);
+
   return (
     <Layout>
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">
-                <h1 className="text-xl text-[#222222] font-medium">astafirullahallazim Admin dashboard</h1>
+                <h1 className="text-xl text-[#222222] font-medium">Admin dashboard</h1>
 
                 <div className="flex gap-3 justify-center lg:justify-between flex-wrap w-full h-100">
                     <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-0">
@@ -63,30 +96,18 @@ const Dashboard = () => {
                 <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
                     <div className="p-3">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table className="w-full min-w-full table-auto text-left border border-main-orange">
+                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
                                         <th scope="col" className="whitespace-nowrap px-2 ">No</th>
                                         <th scope="col" className="whitespace-nowrap px-3 ">Nama warga</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Jenis kelamin</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">NIK</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Alamat</th>
                                         <th scope="col" className="whitespace-nowrap px-3 ">Status pembayaran</th>
                                     </tr>
                                 </thead>
 
                                 <tbody className="font-medium text-xs text-center">
                                     <tr className="border border-b border-main-orange">
-                                        <td className="whitespace-nowrap px-2 py-3 ">1</td>
-                                        <td className="whitespace-nowrap px-3 py-3">Sunoto</td>
-                                        <td className="whitespace-nowrap px-3 py-3">Laki-laki</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">123456789</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">Batam</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">
-                                            <div className="bg-[#FDD4D4] text-[#AC1616] w-fit px-5 py-1 rounded-full m-auto">
-                                                <p className="text-xs">Belum lunas</p>
-                                            </div>
-                                        </td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
