@@ -6,7 +6,6 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-
 const Laporan = () => {
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
@@ -139,7 +138,7 @@ const Laporan = () => {
                                 <p className="text-sm">Apakah anda yakin ingin menghapus data ini?</p>
                             </div>
                             <div className="flex justify-end gap-3">
-                                <button className="bg-gray-500 text-[#FFFFFF] text-sm font-medium py-2 px-3 rounded-md" onClick={() => {console.log(setShowModal)}}>Cancel</button>
+                                <button className="bg-gray-500 text-[#FFFFFF] text-sm font-medium py-2 px-3 rounded-md">Cancel</button>
                                 <button type="submit" className="bg-red-500 text-[#FFFFFF] text-sm font-medium py-2 px-3 rounded-md">Hapus</button>
                             </div>
                         </div>

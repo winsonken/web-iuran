@@ -14,7 +14,9 @@ export default {
       },
       colors: {
         'side-text' : '#7C7B84',
-        'main-orange': '#FF9130'
+        'main-orange': '#FF9130',
+        'second-orange': '#FFA559',
+        'third-orange': '#F9E3D0',
       },
     },
   },
