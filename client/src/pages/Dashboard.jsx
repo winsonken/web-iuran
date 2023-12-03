@@ -14,6 +14,7 @@ const Dashboard = () => {
     const [jumlahWarga, setJumlahWarga] = useState(0);
     const [jumlahPetugas, setJumlahPetugas] = useState(0);
     const [totalNominal, setTotalNominal] = useState(0);
+    const [totalNominalpengeluaran, setTotalNominalpengeluaran] = useState(0);
     const tableRef = useRef(null);
 
     useEffect(() => {
@@ -28,6 +29,9 @@ const Dashboard = () => {
         axios.get('http://localhost:8081/count-nominal')
             .then(res => setTotalNominal(res.data.totalNominal))
             .catch(err => console.log(err));
+        axios.get('http://localhost:8081/count-nominalpengeluaran')
+            .then(res => setTotalNominalpengeluaran(res.data.totalNominalpengeluaran))
+            .catch(err => console.log(err));
         // Fetch data for the table
         axios.get('http://localhost:8081/dashboard')
             .then(res => setWarga(res.data))
@@ -38,6 +42,11 @@ const Dashboard = () => {
         style: 'currency',
         currency: 'IDR',
     }).format(totalNominal);
+
+    const formattedTotalNominalPengeluaran = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+    }).format(totalNominalpengeluaran);
 
 
     useEffect(() => {
@@ -126,7 +135,7 @@ const Dashboard = () => {
                         </div>
 
                         <div className="flex flex-col items-center w-[130px]">
-                            <p className="text-main-orange font-bold text-2xl">1 Jt</p>
+                            <p className="text-main-orange font-bold text-2xl">{formattedTotalNominalPengeluaran}</p>
                             <p className="text-main-orange font-medium text-xs md:text-sm">Pengeluaran</p>
                         </div>
                     </div>

@@ -41,6 +41,21 @@ app.get("/count-nominal", (req, res) => {
     });
 });
 
+app.get("/count-nominalpengeluaran", (req, res) => {
+    const sql = "SELECT SUM(Nominal) AS totalNominalpengeluaran FROM datapengeluaran";
+    // Replace 'your_table_name' with the actual name of your table
+
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        const totalNominalpengeluaran = result[0].totalNominalpengeluaran;
+        return res.json({ totalNominalpengeluaran });
+    });
+});
+
 app.get("/jumlah-petugas", (req, res) => {
     const sql = "SELECT COUNT(*) AS jumlahPetugas FROM datapetugas";
     db.query(sql, (err, result) => {
@@ -63,6 +78,14 @@ app.get("/", (req,res) => {
 
 app.get("/data-warga", (req,res) => {
     const sql = "SELECT * FROM datawarga";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json(data);
+    })
+})
+
+app.get("/pengeluaran", (req,res) => {
+    const sql = "SELECT * FROM datapengeluaran";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
         return res.json(data);
@@ -92,6 +115,18 @@ app.post("/data-warga", (req,res) => {
         req.body.nama,
         req.body.alamat,
         req.body.status,
+    ]
+    db.query(sql, [values], (err, data) => {
+        if(err) return res.json("Error");
+        return res.json(data);
+    })
+})
+
+app.post("/pengeluaran", (req,res) => {
+    const sql = "INSERT INTO datapengeluaran (`Nominal`, `Keterangan`) VALUES (?)";
+    const values = [
+        req.body.nominal,
+        req.body.keterangan,
     ]
     db.query(sql, [values], (err, data) => {
         if(err) return res.json("Error");
@@ -134,6 +169,23 @@ app.put("/data-warga/:id", (req,res) => {
     })
 })
 
+app.put("/pengeluaran/:id", (req,res) => {
+    const sql = "UPDATE datapengeluaran SET `Nominal` = ?, `Keterangan` = ? WHERE ID = ?";
+    const values = [
+        req.body.nominal,
+        req.body.keterangan,
+    ]
+    const id = req.params.id;
+
+    db.query(sql, [...values, id], (err, data) => {
+        if (err) {
+            console.error(err); // Log the error for debugging
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        return res.json(data);
+    })
+})
+
 app.put("/data-petugas/:id", (req,res) => {
     const sql = "UPDATE datapetugas SET `IDuser` = ?, `Password` = ?, `NIK` = ?, `Nama` = ?, `Gender` = ?, `Status` = ? WHERE ID = ?";
     const values = [
@@ -158,6 +210,16 @@ app.put("/data-petugas/:id", (req,res) => {
 
 app.delete("/deletewarga/:id", (req,res) => {
     const sql = "DELETE FROM datawarga WHERE ID = ?";
+    const id = req.params.id;
+
+    db.query(sql, [id], (err, data) => {
+        if(err) return res.json("Error");
+        return res.json(data);
+    })
+})
+
+app.delete("/deletepengeluaran/:id", (req,res) => {
+    const sql = "DELETE FROM datapengeluaran WHERE ID = ?";
     const id = req.params.id;
 
     db.query(sql, [id], (err, data) => {
