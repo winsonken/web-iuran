@@ -9,6 +9,8 @@ import axios from 'axios';
 import $ from 'jquery';
 import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
 import 'datatables.net'; // Import DataTables
+import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Tahun = () => {
     const [showModal, setShowModal] = useState(false);
@@ -18,6 +20,7 @@ const Tahun = () => {
     const [months, setMonths] = useState('')
     const [year, setYear] = useState('')
     const { id } = useParams();
+    const { Month, Year } = useParams();
     const tableRef = useRef(null);
 
     function handleSubmit(event) {
@@ -27,7 +30,9 @@ const Tahun = () => {
         axios.post(`http://localhost:8081/tahun/${id}`, {month, year})
         .then(res => {
             console.log(res);
-            window.location.reload();
+            Swal.fire('Berhasil', 'Data telah berhasil ditambah.', 'success').then(() => {
+                window.location.reload();
+            });
         }).catch(err => console.log(err));
     }
 
@@ -45,8 +50,8 @@ const Tahun = () => {
                             { title: 'No', render: function (data, type, row, meta) {
                                 return meta.row + 1;
                             } },
-                            { title: 'Tahun', data: 'tahun'},
                             { title: 'Bulan', data: 'bulan'},
+                            { title: 'Tahun', data: 'tahun'},
                             {
                                 title: 'Aksi',
                                 render: function (data, type, row, meta) {
@@ -54,13 +59,15 @@ const Tahun = () => {
                                     const bulan = row.bulan; // replace 'id' with the actual field name from your data
                                     const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
                                     return `
-                                        <a href="/iuran/${bulan}/${tahun}" class='btn btn-success'>Open</a>
-                                        <button class='btn btn-danger delete-button' data-id=${id}>Delete</button>
+                                        <a href="/iuran/${bulan}/${tahun}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
+                                        <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
                                     `;
                                 },
                             },
                         ],
                     });
+                    const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                    searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
                     $(tableRef.current).on('click', '.delete-button', function() {
                         const id = $(this).data('id');
                         handleDelete(id);
@@ -71,15 +78,33 @@ const Tahun = () => {
     }, [id]);
 
     const handleDelete = async (id) => {
-        setShowModal(!showModal);
-        
-        try {
-            await axios.delete(`http://localhost:8081/deletebulan/${id}`);
-            window.location.reload();
-        } catch (err) {
-            console.error('Error in DELETE request:', err);
-        }
-        setModal("delete-modal");
+        // Use SweetAlert to show a confirmation dialog
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.delete(`http://localhost:8081/deletebulan/${id}`);
+                Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'info').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak dihapus.', 'info');
+            }
+        });
     };
 
 
@@ -105,7 +130,7 @@ const Tahun = () => {
         <Layout>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
-                    <h1 className="text-xl text-[#222222] font-medium">Laporan tahun 2023</h1>
+                    <h1 className="text-xl text-[#222222] font-medium">Laporan tahun {id}</h1>
                     
                     <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
                         <FaCirclePlus />
@@ -119,10 +144,10 @@ const Tahun = () => {
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
-                                        <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Tahun</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Bulan</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Aksi</th>
+                                        <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Tahun</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Bulan</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Aksi</th>
                                     </tr>
                                 </thead>
 

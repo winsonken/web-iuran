@@ -11,7 +11,34 @@ import moment from 'moment';
 
 const Dashboard = () => {
     const [warga, setWarga] = useState([]);
+    const [jumlahWarga, setJumlahWarga] = useState(0);
+    const [jumlahPetugas, setJumlahPetugas] = useState(0);
+    const [totalNominal, setTotalNominal] = useState(0);
     const tableRef = useRef(null);
+
+    useEffect(() => {
+        // Fetch jumlah warga
+        axios.get('http://localhost:8081/jumlah-warga')
+            .then(res => setJumlahWarga(res.data.jumlahWarga))
+            .catch(err => console.log(err));
+
+        axios.get('http://localhost:8081/jumlah-petugas')
+            .then(res => setJumlahPetugas(res.data.jumlahPetugas))
+            .catch(err => console.log(err));
+        axios.get('http://localhost:8081/count-nominal')
+            .then(res => setTotalNominal(res.data.totalNominal))
+            .catch(err => console.log(err));
+        // Fetch data for the table
+        axios.get('http://localhost:8081/dashboard')
+            .then(res => setWarga(res.data))
+            .catch(err => console.log(err));
+    }, []);
+
+    const formattedTotalNominal = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+    }).format(totalNominal);
+
 
     useEffect(() => {
         let counter = 1;
@@ -27,7 +54,23 @@ const Dashboard = () => {
                     { title: 'Nama Perwakilan', data: 'Nama'},
                     { title: 'Status', data: 'Status'},
                 ],
+                createdRow: function (row, data, dataIndex) {
+                    // Set text color based on the "Status" value
+                    const status = data.Status;
+                    const statusCell = $('td:eq(2)', row); // Change 4 to the correct index of the "Status" column
+    
+                    if (status === 'Lunas') {
+                        statusCell.css('color', '#4FAC16'); // Set text color to green
+                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                    } else if (status === 'On Going') {
+                        statusCell.css('color', 'red'); // Set text color to red
+                        // You might want to remove the custom class if status is not "Active"
+                        statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                    }
+                },
             });
+            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
         }
     }, [warga]);
 
@@ -50,7 +93,7 @@ const Dashboard = () => {
                         </div>
 
                         <div className="flex flex-col items-center w-[130px]">
-                            <p className="text-main-orange font-bold text-2xl">100</p>
+                            <p className="text-main-orange font-bold text-2xl">{jumlahWarga}</p>
                             <p className="text-main-orange font-medium text-xs md:text-sm">Jumlah warga</p>
                         </div>
                     </div>
@@ -61,7 +104,7 @@ const Dashboard = () => {
                         </div>
 
                         <div className="flex flex-col items-center w-[130px]">
-                            <p className="text-main-orange font-bold text-2xl">3</p>
+                            <p className="text-main-orange font-bold text-2xl">{jumlahPetugas}</p>
                             <p className="text-main-orange font-medium text-xs md:text-sm">Jumlah petugas</p>
                         </div>
                     </div>
@@ -72,7 +115,7 @@ const Dashboard = () => {
                         </div>
 
                         <div className="flex flex-col items-center w-[130px]">
-                            <p className="text-main-orange font-bold text-2xl">1,5 Jt</p>
+                            <p className="text-main-orange font-bold text-2xl">{formattedTotalNominal}</p>
                             <p className="text-main-orange font-medium text-xs md:text-sm">Pemasukan</p>
                         </div>
                     </div>
@@ -99,9 +142,9 @@ const Dashboard = () => {
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
-                                        <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nama warga</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Status pembayaran</th>
+                                        <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Nama warga</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Status pembayaran</th>
                                     </tr>
                                 </thead>
 

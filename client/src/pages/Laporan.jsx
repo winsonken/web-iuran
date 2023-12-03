@@ -9,6 +9,7 @@ import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
 import 'datatables.net'; // Import DataTables\
 import $ from 'jquery';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 const Laporan = () => {
@@ -27,7 +28,9 @@ const Laporan = () => {
         axios.post('http://localhost:8081/laporan', {id, years})
         .then(res => {
             console.log(res);
-            window.location.reload();
+            Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'success').then(() => {
+                window.location.reload();
+            });
         }).catch(err => console.log(err));
     }
     const handleSelectChange = (e) => {
@@ -54,13 +57,15 @@ const Laporan = () => {
                             const id = row.ID; // replace 'id' with the actual field name from your data
                             const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
                             return `
-                                <a href="/tahun/${id}" class='btn btn-success'>Open</a>
-                                <button class='btn btn-danger delete-button' data-id=${id}>Delete</button>
+                                <a href="/tahun/${id}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
+                                <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
                             `;
                         },
                     },
                 ],
             });
+            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
             $(tableRef.current).on('click', '.delete-button', function() {
                 const id = $(this).data('id');
                 handleDelete(id);
@@ -69,12 +74,33 @@ const Laporan = () => {
     }, [year]);
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8081/deletetahun/${id}`);
-            window.location.reload();
-        } catch (err) {
-            console.error('Error in DELETE request:', err);
-        }
+        // Use SweetAlert to show a confirmation dialog
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.delete(`http://localhost:8081/deletetahun/${id}`);
+                Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak dihapus.', 'info');
+            }
+        });
     };
 
     useEffect(() => {
@@ -117,10 +143,10 @@ const Laporan = () => {
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                             <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
-                                        <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Tahun</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Detail</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Aksi</th>
+                                        <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Tahun</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Detail</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Aksi</th>
                                     </tr>
                                 </thead>
 

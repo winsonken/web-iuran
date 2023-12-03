@@ -10,6 +10,9 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import moment from 'moment';
+import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Iuran = () => {
     // Show or Hide Modal
@@ -39,7 +42,9 @@ const Iuran = () => {
         axios.post(`http://localhost:8081/iuran/${Month}/${Year}`, {nama, month, year, date, nominal})
         .then(res => {
             console.log(res);
-            window.location.reload();
+            Swal.fire('Berhasil', 'Data telah berhasil ditambah.', 'success').then(() => {
+                window.location.reload();
+            });
         }).catch(err => console.log(err));
     }
 
@@ -54,6 +59,7 @@ const Iuran = () => {
                 if (tableRef.current) {
                     $(tableRef.current).DataTable({
                         destroy: true, // Destroy any existing DataTable instance
+                        responsive: true,
                         data: res.data,
                         columns: [
                             { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
@@ -96,7 +102,7 @@ const Iuran = () => {
                                         console.log("ID:", id); // Log the extracted ID
                                         return `
                                             
-                                            <button class='btn btn-danger delete-button' data-id=${id}>Delete</button>
+                                        <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
                                         `;
                                     } else {
                                         console.log("Row Data:", row); // Log the entire row to inspect its structure
@@ -106,8 +112,8 @@ const Iuran = () => {
                                         const date = row && row.Date; // Check if row is defined before accessing ID
                                         console.log("ID:", id); // Log the extracted ID
                                         return `
-                                            <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-success update-button'>Update</button>
-                                            <button class='btn btn-danger delete-button' data-id=${id}>Delete</button>
+                                            <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-outline-success btn-block btn-flat update-button'>Update</button>
+                                            <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
                                         `;
                                     }
                                     console.log("Row Data:", row); // Log the entire row to inspect its structure
@@ -123,7 +129,28 @@ const Iuran = () => {
                                 },
                             },
                         ],
+                        createdRow: function (row, data, dataIndex) {
+                            // Set text color based on the "Status" value
+                            const status = data.Status;
+                            const expired = data.Expired;
+                            const statusCell = $('td:eq(3)', row); // Change 4 to the correct index of the "Status" column
+            
+                            if (status === 'Lunas') {
+                                statusCell.css('color', '#4FAC16'); // Set text color to green
+                                statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                            } else if (status === 'On Going' && expired === 'NONE') {
+                                statusCell.css('color', 'red'); // Set text color to red
+                                // You might want to remove the custom class if status is not "Active"
+                                statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                            } else if (expired === 'OVERDUE') {
+                                statusCell.css('color', 'red'); // Set text color to red
+                                // You might want to remove the custom class if status is not "Active"
+                                statusCell.html(`<span class="bg-[#7a7979] text-[#000000] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Over Due</span>`);
+                            }
+                        },
                     });
+                    const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                    searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
                     $(tableRef.current).on('click', '.delete-button', function() {
                         const id = $(this).data('id');
                         handleDelete(id);
@@ -141,38 +168,99 @@ const Iuran = () => {
     }, [Month, Year]);
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8081/deletelaporan/${id}`);
-            window.location.reload();
-        } catch (err) {
-            console.error('Error in DELETE request:', err);
-        }
+        // Use SweetAlert to show a confirmation dialog
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.delete(`http://localhost:8081/deletelaporan/${id}`);
+                Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak dihapus.', 'info');
+            }
+        });
     };
 
     const handleExpired = () => {
-        axios.put(`http://localhost:8081/iuran/${Month}/${Year}/updateStatus`)
-            .then(res => {
-                console.log("Status update result:", res.data);
-                window.location.reload();
-            })
-            .catch(err => console.log(err));
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.put(`http://localhost:8081/iuran/${Month}/${Year}/updateStatus`);
+                Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat update data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak diupdate.', 'info');
+            }
+        });
     };
 
     const handleCancelExpired = () => {
-        axios.put(`http://localhost:8081/iuran/${Month}/${Year}/updateStatusCancel`)
-            .then(res => {
-                console.log("Status update result:", res.data);
-                window.location.reload();
-            })
-            .catch(err => console.log(err));
-    }; 
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.put(`http://localhost:8081/iuran/${Month}/${Year}/updateStatusCancel`);
+                Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat update data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak diupdate.', 'info');
+            }
+        });
+    };
     function handleEditModal(e, f, g, h) {
         axios.get(`http://localhost:8081/iuran/${Month}/${Year}/${id}`)
             .then(res => {
                 setId(e || '');
                 setNama(f || '');
                 SetNominal(g || '');
-                SetDate(h || '');
+                SetDate(moment(h).format('YYYY-MM-DD') || '');
         }).catch(err => console.log(err));
             setShowModal(!showModal);
             setModal("edit-modal");
@@ -192,8 +280,9 @@ const Iuran = () => {
         event.preventDefault();
         axios.put(`http://localhost:8081/iuran/${Month}/${Year}/${id}`, {nama, date, nominal})
         .then(res => {
-            console.log(res);
-            window.location.reload();
+            Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                window.location.reload();
+            });
         }).catch(err => console.log(err));
     }
 
@@ -208,8 +297,7 @@ const Iuran = () => {
     // }
 
     function handleDeleteModal() {
-        setShowModal(!showModal);
-        setModal("delete-modal");
+
     }
 
     return (
@@ -231,21 +319,22 @@ const Iuran = () => {
                     <p className="text-xs hidden xs:block">Cancel Expired</p>
                     </button>
                 </div>  
-
                 <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
                     <div className="p-3">
                         <div className="overflow-x-auto rounded-t-md">
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
-                                        <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">No. KK</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nama</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Status</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Date</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nominal</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Aksi</th>
+                                        
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">No</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">No. KK</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Nama</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Status</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Date</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Nominal</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Aksi</th>
                                     </tr>
+                                    
                                 </thead>
 
                                 <tbody className="font-medium text-xs text-center">
@@ -316,7 +405,7 @@ const Iuran = () => {
 
             <ModalForm id="delete-modal"  modalType={modal} showModal={showModal} setShowModal={setShowModal} title="Hapus data laporan tahun 2023">
                 <div>
-                    <form onSubmit={handleSubmit}>
+                    <form>
                         <div className="flex flex-col gap-5">
                             <div>
                                 <p className="text-sm">Apakah anda yakin ingin menghapus data ini?</p>

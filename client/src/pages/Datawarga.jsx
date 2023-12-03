@@ -11,6 +11,10 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import moment from 'moment';
 import {Link} from 'react-router-dom'
+import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 
 const Datawarga = () => {
@@ -55,13 +59,29 @@ const Datawarga = () => {
                             const status = row && row.Status; // Check if row is defined before accessing ID
                             console.log("ID:", id); // Log the extracted ID
                             return `
-                                <button data-id=${id} data-nama=${nama} data-kk=${kk} data-alamat=${alamat} data-status=${status}">Update</button>
-                                <button class='btn btn-danger delete-button' data-id=${id} >Delete</button>
+                                <button data-id=${id} data-nama=${nama} data-kk=${kk} data-alamat=${alamat} data-status=${status} class='btn btn-outline-success btn-block btn-flat update-button'">Update</button>
+                                <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id} >Delete</button>
                             `;
                         },
                     },
                 ],
+                createdRow: function (row, data, dataIndex) {
+                    // Set text color based on the "Status" value
+                    const status = data.Status;
+                    const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
+    
+                    if (status === 'Active') {
+                        statusCell.css('color', '#4FAC16'); // Set text color to green
+                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                    } else if (status === 'Deactive') {
+                        statusCell.css('color', 'red'); // Set text color to red
+                        // You might want to remove the custom class if status is not "Active"
+                        statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                    }
+                },
             });
+            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
             $(tableRef.current).on('click', '.delete-button', function() {
                 const id = $(this).data('id');
                 handleDelete(id);
@@ -84,17 +104,40 @@ const Datawarga = () => {
         axios.post('http://localhost:8081/data-warga', {kk, nama, alamat, status})
         .then(res => {
             console.log(res);
-            window.location.reload();
+            Swal.fire('Berhasil', 'Data telah berhasil ditambah.', 'success').then(() => {
+                window.location.reload();
+            });
         }).catch(err => console.log(err));
     }
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8081/deletewarga/${id}`);
-            window.location.reload();
-        } catch (err) {
-            console.error('Error in DELETE request:', err);
-        }
+        // Use SweetAlert to show a confirmation dialog
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.delete(`http://localhost:8081/deletewarga/${id}`);
+                Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak dihapus.', 'info');
+            }
+        });
     };
 
     useEffect(() => {
@@ -139,7 +182,9 @@ const Datawarga = () => {
         axios.put(`http://localhost:8081/data-warga/${id}`, {nama, kk, alamat, status})
         .then(res => {
             console.log(res);
-            window.location.reload();
+            Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                window.location.reload();
+            });
         }).catch(err => console.log(err));
     }
 
@@ -166,12 +211,12 @@ const Datawarga = () => {
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
-                                        <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">No KK</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nama</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Alamat</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Status</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Aksi</th>
+                                        <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">No KK</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Nama</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Alamat</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Status</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Aksi</th>
                                     </tr>
                                 </thead>
 

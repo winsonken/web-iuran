@@ -14,6 +14,45 @@ const db = mysql.createConnection({
     database: "crud"
 })
 
+app.get("/jumlah-warga", (req, res) => {
+    const sql = "SELECT COUNT(*) AS jumlahWarga FROM datawarga";
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        const jumlahWarga = result[0].jumlahWarga;
+        return res.json({ jumlahWarga });
+    });
+});
+
+app.get("/count-nominal", (req, res) => {
+    const sql = "SELECT SUM(Nominal) AS totalNominal FROM datalaporan";
+    // Replace 'your_table_name' with the actual name of your table
+
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        const totalNominal = result[0].totalNominal;
+        return res.json({ totalNominal });
+    });
+});
+
+app.get("/jumlah-petugas", (req, res) => {
+    const sql = "SELECT COUNT(*) AS jumlahPetugas FROM datapetugas";
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        const jumlahPetugas = result[0].jumlahPetugas;
+        return res.json({ jumlahPetugas });
+    });
+});
+
 app.get("/", (req,res) => {
     const sql = "SELECT * FROM datalaporan";
     db.query(sql, (err,data) => {
@@ -61,9 +100,9 @@ app.post("/data-warga", (req,res) => {
 })
 
 app.post("/data-petugas", (req,res) => {
-    const sql = "INSERT INTO datapetugas (`ID`, `Password`, `NIK`, `Nama`, `Gender`, `Status`) VALUES (?)";
+    const sql = "INSERT INTO datapetugas (`IDuser`, `Password`, `NIK`, `Nama`, `Gender`, `Status`) VALUES (?)";
     const values = [
-        req.body.id,
+        req.body.iduser,
         req.body.pass,
         req.body.nik,
         req.body.nama,
@@ -95,6 +134,28 @@ app.put("/data-warga/:id", (req,res) => {
     })
 })
 
+app.put("/data-petugas/:id", (req,res) => {
+    const sql = "UPDATE datapetugas SET `IDuser` = ?, `Password` = ?, `NIK` = ?, `Nama` = ?, `Gender` = ?, `Status` = ? WHERE ID = ?";
+    const values = [
+        req.body.iduser,
+        req.body.pass,
+        req.body.nik,
+        req.body.nama,
+        req.body.gender,
+        req.body.status
+    ]
+    const id = req.params.id;
+
+    db.query(sql, [...values, id], (err, data) => {
+        if (err) {
+            console.error(err); // Log the error for debugging
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        return res.json(data);
+    })
+})
+
+
 app.delete("/deletewarga/:id", (req,res) => {
     const sql = "DELETE FROM datawarga WHERE ID = ?";
     const id = req.params.id;
@@ -110,9 +171,14 @@ app.delete("/deletepetugas/:id", (req,res) => {
     const id = req.params.id;
 
     db.query(sql, [id], (err, data) => {
-        if(err) return res.json("Error");
-        return res.json(data);
-    })
+        if (err) {
+            // Send an error response with a custom message
+            return res.status(500).json({ error: "Error deleting record" });
+        }
+
+        // If the deletion is successful, send a success response
+        return res.json({ message: "Record deleted successfully" });
+    });
 })
 
 app.get("/iuran/:bulan/:tahun/:id", (req, res) => {
@@ -223,14 +289,24 @@ app.post("/iuran/:bulan/:tahun", async (req, res) => {
         // Set common values for Month and Year
         const Month = req.params.bulan;
         const Year = req.params.tahun;
-        const NominalValue = "0"; // Change this to your desired year
+        const NominalValue = "0";
+        const ExpiredValue = "NONE"; // Change this to your desired year
 
         // Insert data into datalaporan table
         for (const row of datawarga) {
             const sqlInsert = `
-                INSERT INTO datalaporan (KK, Nama, Month, Year, Date, Status, Nominal)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            `;
+            INSERT INTO datalaporan (KK, Nama, Month, Year, Date, Status, Nominal, Expired)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+            KK = VALUES(KK),
+            Nama = VALUES(Nama),
+            Month = VALUES(Month),
+            Year = VALUES(Year),
+            Date = VALUES(Date),
+            Status = VALUES(Status),
+            Nominal = VALUES(Nominal),
+            Expired = VALUES(Expired)
+        `;
             const values = [
                 row.KK,
                 row.Nama,
@@ -238,7 +314,8 @@ app.post("/iuran/:bulan/:tahun", async (req, res) => {
                 Year,
                 null, // Set to your desired default value for Date
                 null, // Set to your desired default value for Status
-                NominalValue, // Set to your desired default value for Nominal
+                NominalValue,
+                ExpiredValue // Set to your desired default value for Nominal
             ];
 
             await new Promise((resolve, reject) => {

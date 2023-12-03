@@ -11,6 +11,8 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import moment from 'moment';
 import {Link} from 'react-router-dom'
+import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const Datapetugas = () => {
@@ -27,6 +29,7 @@ const Datapetugas = () => {
     const [alamat, setAlamat] = useState("");
     const [status, setStatus] = useState("");
     const [id, setId] = useState('')
+    const [iduser, setIduser] = useState('')
     const [petugas, setPetugas] = useState([]);
     const tableRef = useRef(null);
 
@@ -50,6 +53,7 @@ const Datapetugas = () => {
                         render: function (data, type, row, meta) {
                             console.log("Row Data:", row); // Log the entire row to inspect its structure
                             const id = row && row.ID; // Check if row is defined before accessing ID
+                            const iduser = row && row.IDuser; // Check if row is defined before accessing ID
                             const pass = row && row.Password; // Check if row is defined before accessing ID
                             const nik = row && row.NIK; // Check if row is defined before accessing ID
                             const nama = row && row.Nama; // Check if row is defined before accessing ID
@@ -57,25 +61,42 @@ const Datapetugas = () => {
                             const status = row && row.Status; // Check if row is defined before accessing ID
                             console.log("ID:", id); // Log the extracted ID
                             return `
-                                <button data-id=${id} data-nama=${nama} data-nik=${nik} data-gender=${gender} data-status=${status} data-pass=${pass}">Update</button>
-                                <button class='btn btn-danger delete-button' data-id=${id} >Delete</button>
+                                <button data-id=${id} data-iduser=${iduser} data-nama=${nama} data-nik=${nik} data-gender=${gender} data-status=${status} data-pass=${pass} class='btn btn-outline-success btn-block btn-flat update-button'">Update</button>
+                                <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id} >Delete</button>
                             `;
                         },
                     },
                 ],
+                createdRow: function (row, data, dataIndex) {
+                    // Set text color based on the "Status" value
+                    const status = data.Status;
+                    const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
+    
+                    if (status === 'Active') {
+                        statusCell.css('color', '#4FAC16'); // Set text color to green
+                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                    } else if (status === 'Deactive') {
+                        statusCell.css('color', 'red'); // Set text color to red
+                        // You might want to remove the custom class if status is not "Active"
+                        statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                    }
+                },
             });
+            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
             $(tableRef.current).on('click', '.delete-button', function() {
                 const id = $(this).data('id');
                 handleDelete(id);
             });
             $(tableRef.current).on('click', '.update-button', function() {
                 const e = $(this).data('id');
+                const k = $(this).data('iduser');
                 const j = $(this).data('pass')
                 const f = $(this).data('nama');
                 const g = $(this).data('nik');
                 const h = $(this).data('gender');
                 const i = $(this).data('status');
-                handleEditModal(e, f, g, h, i, j);
+                handleEditModal(e, f, g, h, i, j, k);
             });
         }
     }, [petugas]);
@@ -87,12 +108,32 @@ const Datapetugas = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8081/deletepetugas/${id}`);
-            window.location.reload();
-        } catch (err) {
-            console.error('Error in DELETE request:', err);
-        }
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.delete(`http://localhost:8081/deletepetugas/${id}`);
+                Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak dihapus.', 'info');
+            }
+        });
     };
 
     const navigate = useNavigate();
@@ -101,10 +142,12 @@ const Datapetugas = () => {
         event.preventDefault();
         navigate("/data-petugas");
         setShowModal(!showModal);
-        axios.post('http://localhost:8081/data-petugas', {id, pass, nik, nama, gender, status})
+        axios.post('http://localhost:8081/data-petugas', {iduser, pass, nik, nama, gender, status})
         .then(res => {
             console.log(res);
-            window.location.reload();
+            Swal.fire('Berhasil', 'Data telah berhasil ditambah.', 'success').then(() => {
+                window.location.reload();
+            });
         }).catch(err => console.log(err));
     }
 
@@ -113,14 +156,35 @@ const Datapetugas = () => {
         setModal("create-modal");
     }
 
-    function handleEditModal() {
-        setShowModal(!showModal);
-        setModal("edit-modal");
-    }
+    function handleEditModal(e, f, g, h, i ,j, k) {
+        axios.get(`http://localhost:8081/data-petugas/${id}`)
+            .then(res => {
+                setId(e || '');
+                setIduser(k || '');
+                setPass(j || '');
+                setNama(f || '');
+                setNIK(g || '');
+                setGender(h || '');
+                setStatus(i || '');
+        }).catch(err => console.log(err));
+            setShowModal(!showModal);
+            setModal("edit-modal");
+
+    };
 
     function handleDeleteModal() {
-        setShowModal(!showModal);
-        setModal("delete-modal");
+
+    }
+
+    function handleSubmita(event) {
+        event.preventDefault();
+        axios.put(`http://localhost:8081/data-petugas/${id}`, {iduser, pass, nik, nama, gender, status})
+        .then(res => {
+            console.log(res);
+            Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                window.location.reload();
+            });
+        }).catch(err => console.log(err));
     }
 
     return (
@@ -141,12 +205,12 @@ const Datapetugas = () => {
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example  ">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
-                                        <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">No.NIK</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nama</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Gender</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Status</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Aksi</th>
+                                        <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">No.NIK</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Nama</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Gender</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Status</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Aksi</th>
                                     </tr>
                                 </thead>
 
@@ -173,7 +237,7 @@ const Datapetugas = () => {
                             <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
                             <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">ID</label>
-                                    <input type="text"  placeholder="Input ID petugas" required onChange={e => setId(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text"  placeholder="Input ID petugas" required onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">Password</label>
@@ -216,40 +280,40 @@ const Datapetugas = () => {
 
             <ModalForm id="edit-modal" modalType={modal} showModal={showModal} setShowModal={setShowModal} title="Ubah data pengeluaran">
                 <div>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmita}>
                         <div className="flex flex-col gap-5">
-                            
                         <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
-                                <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Nama</label>
-                                    <input type="text" id="nama-petugas" value={nama} placeholder="Input nama petugas" onChange={e => { setNama(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                        <div className="flex flex-col gap-2 sm:w-44 grow  ">
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Username</label>
+                                    <input type="text"  placeholder="Input ID petugas" required value = {iduser} onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="kk" className="text-sm font-medium">No. KK</label>
-                                    <input type="number" id="kk" value={kk} placeholder="Input KK" onChange={e => { setKK(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Password</label>
+                                    <input type="password"  placeholder="Input Password petugas" required value = {pass} onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nik" className="text-sm font-medium">NIK</label>
-                                    <input type="number" id="nik" value={nik} placeholder="Input NIK" onChange={e => { setNIK(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">NIK</label>
+                                    <input type="number" placeholder="Input NIK petugas" required value = {nik} onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                </div>
+
+                                <div className="flex flex-col gap-2 sm:w-44 grow  ">
+                                    <label htmlFor="nik" className="text-sm font-medium">Nama</label>
+                                    <input type="text" placeholder="Input Nama" required value = {nama} onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow ">
                                     <label htmlFor="jenis-kelamin" className="text-sm font-medium">Jenis kelamin</label>
-                                    <select name="jenis-kelamin" id="jenis-kelamin" onChange={e => { setJenisKelamin(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                        <option selected hidden>Pilih jenis kelamin</option>
-                                        <option value="laki-laki">Laki-laki</option>
-                                        <option value="perempuan">Perempuan</option>
+                                    <select type="text" required value = {gender} onChange={e => setGender(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
+                                    <option value="" disabled selected>Select Gender...</option>
+                                        <option value="Laki-laki">Laki-laki</option>
+                                        <option value="Perempuan">Perempuan</option>
                                     </select>
-                                </div>
-                                <div className="flex flex-col gap-2 sm:w-44 grow ">
-                                    <label htmlFor="alamat" className="text-sm font-medium">Alamat</label>
-                                    <input type="text" id="alamat" value={alamat} placeholder="Input alamat" onChange={e => { setAlamat(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow">
                                     <label htmlFor="status" className="text-sm font-medium">Status</label>
-                                    <select name="status" id="status" onChange={e => { setStatus(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                        <option selected hidden>Pilih status</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="tidak-aktif">Tidak aktif</option>
+                                    <select type="text" required value = {status} onChange={e => setStatus(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
+                                    <option value="" disabled selected>Select Status...</option>
+                                        <option value="Active">Aktif</option>
+                                        <option value="Deactive">Tidak aktif</option>
                                     </select>
                                 </div>
                             </div>
@@ -264,7 +328,7 @@ const Datapetugas = () => {
 
             <ModalForm id="delete-modal"  modalType={modal} showModal={showModal} setShowModal={setShowModal} title="Hapus data pengeluaran">
                 <div>
-                    <form onSubmit={handleSubmit}>
+                    <form>
                         <div className="flex flex-col gap-5">
                             <div>
                                 <p className="text-sm">Apakah anda yakin ingin menghapus data ini?</p>
