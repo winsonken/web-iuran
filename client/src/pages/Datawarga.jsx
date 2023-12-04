@@ -93,7 +93,7 @@ const Datawarga = () => {
                     } else if (status === 'Deactive') {
                         statusCell.css('color', 'red'); // Set text color to red
                         // You might want to remove the custom class if status is not "Active"
-                        statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
                     }
                 },
             });

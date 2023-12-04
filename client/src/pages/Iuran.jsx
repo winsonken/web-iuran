@@ -14,6 +14,10 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { FaUserPlus } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { RiPassExpiredFill } from "react-icons/ri";
+import { MdCancel } from "react-icons/md";
 
 const Iuran = () => {
     // Show or Hide Modal
@@ -174,7 +178,7 @@ const Iuran = () => {
                             } else if (status === 'On Going' && expired === 'NONE') {
                                 statusCell.css('color', 'red'); // Set text color to red
                                 // You might want to remove the custom class if status is not "Active"
-                                statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                                statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
                             } else if (expired === 'OVERDUE') {
                                 statusCell.css('color', 'red'); // Set text color to red
                                 // You might want to remove the custom class if status is not "Active"
@@ -370,26 +374,32 @@ const Iuran = () => {
     return (
         <Layout>
             <div className="flex flex-col gap-5">
-                <div className="flex justify-between">
+                <div className="flex flex-row justify-between items-center">
                     <h1 className="text-xl text-[#222222] font-medium">Laporan Iuran Tahun {Year} Bulan {Month}</h1>
                     
-                    <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
-                        <FaCirclePlus />
-                        <p className="text-xs hidden xs:block">Tambah warga</p>
-                    </button>
-                    <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md' onClick={handleExpired}>
-                    <FaCirclePlus />
-                    <p className="text-xs hidden xs:block">Expired</p>
-                    </button>
-                    <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md' onClick={handleCancelExpired}>
-                    <FaCirclePlus />
-                    <p className="text-xs hidden xs:block">Cancel Expired</p>
-                    </button>
-                    <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md' onClick={handleDeleteAll}>
-                    <FaCirclePlus />
-                    <p className="text-xs hidden xs:block">Delete All</p>
-                    </button>
+                    <div className="flex flex-row flex-wrap gap-2">
+                        <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md" onClick={handleAddModal}>
+                            <FaUserPlus />
+                            <p className="text-xs hidden xs:block">Tambah warga</p>
+                        </button>
+
+                        <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md' onClick={handleExpired}>
+                            <RiPassExpiredFill />
+                            <p className="text-xs hidden xs:block">Expired</p>
+                        </button>
+
+                        <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md' onClick={handleCancelExpired}>
+                            <MdCancel />
+                            <p className="text-xs hidden xs:block">Cancel Expired</p>
+                        </button>
+
+                        <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md' onClick={handleDeleteAll}>
+                            <MdDeleteForever />
+                            <p className="text-xs hidden xs:block">Delete All</p>
+                        </button>
+                    </div>
                 </div>  
+
                 <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
                     <div className="p-3">
                         <div className="overflow-x-auto rounded-t-md">
