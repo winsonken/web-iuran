@@ -96,7 +96,7 @@ const Dashboard = () => {
                 <h1 className="text-xl text-[#222222] font-medium">Admin dashboard</h1>
 
                 <div className="flex gap-3 justify-center lg:justify-between flex-wrap w-full h-100">
-                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-0">
+                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm s">
                         <div className="bg-[#F9E3D0] w-10 h-10 md:w-12 md:h-12 rounded-full flex justify-center items-center">
                             <IoPeople className="text-2xl text-main-orange md:text-3xl" />
                         </div>
@@ -107,7 +107,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-0">
+                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm ">
                         <div className="bg-[#F9E3D0] w-10 h-10 md:w-12 md:h-12 rounded-full flex justify-center items-center">
                             <IoPeople className="text-2xl text-main-orange md:text-3xl" />
                         </div>
@@ -118,7 +118,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit  xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-0">
+                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit  xs:h-[70px] sm:h-[80px] p-1 rounded-sm ">
                         <div className="bg-[#F9E3D0] w-10 h-10 md:w-12 md:h-12 rounded-full flex justify-center items-center">
                             <FaMoneyCheck className="text-2xl text-main-orange md:text-3xl" />
                         </div>
@@ -129,7 +129,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit  xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-0">
+                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit  xs:h-[70px] sm:h-[80px] p-1 rounded-sm ">
                         <div className="bg-[#F9E3D0] w-10 h-10 md:w-12 md:h-12 rounded-full flex justify-center items-center">
                             <GiPayMoney className="text-2xl text-main-orange md:text-3xl" />
                         </div>
