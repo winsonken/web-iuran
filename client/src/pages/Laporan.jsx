@@ -49,6 +49,11 @@ const Laporan = () => {
                 data: year,
                 searching: false, // Hide search bar
                 lengthChange: false, // Hide show entries dropdown
+                pageLength: 12, // Set the number of rows per page
+                paging: false, // Disable pagination
+                info: false, 
+                scrollX: false, // Disable horizontal scrolling
+                autoWidth: false,
                 columns: [
                     { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
                         return counter++;

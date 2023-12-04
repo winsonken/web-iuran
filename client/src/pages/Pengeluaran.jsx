@@ -37,6 +37,8 @@ const Pengeluaran = () => {
             $(tableRef.current).DataTable({
                 destroy: true, // Destroy any existing DataTable instance
                 data: pengeluaran,
+                scrollX: false, // Disable horizontal scrolling
+                autoWidth: false,
                 columns: [
                     { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
                         return counter++;
@@ -79,6 +81,11 @@ const Pengeluaran = () => {
             });
             const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
             searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+            searchInput.css({
+                'text-align': 'left',
+                'margin-right': '3px', // Optional: Adjust the margin as needed
+                'width': '200px' // Optional: Adjust the width as needed
+            });
             $(tableRef.current).on('click', '.delete-button', function() {
                 const id = $(this).data('id');
                 handleDelete(id);

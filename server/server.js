@@ -271,7 +271,8 @@ app.get("/tahun/:id", (req, res) => {
         SELECT m.*
         FROM month m
         JOIN year y ON m.tahun = y.ID
-        WHERE y.ID = ?;
+        WHERE y.ID = ?
+        ORDER BY m.ID ASC;
     `;
 
     db.query(sql, [id], (err, data) => {
@@ -496,6 +497,22 @@ app.delete("/deletetahun/:id", (req,res) => {
         return res.json(data);
     })
 })
+
+app.delete("/deleteall/:bulan/:tahun", (req, res) => {
+    const Month = req.params.bulan;
+    const Year = req.params.tahun;
+
+    const sqlDelete = "DELETE FROM datalaporan WHERE Month = ? AND Year = ?";
+
+    db.query(sqlDelete, [Month, Year], (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        return res.json(data);
+    });
+});
 
 
 app.listen(8081, () => {

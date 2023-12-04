@@ -61,6 +61,9 @@ const Iuran = () => {
                     $(tableRef.current).DataTable({
                         destroy: true, // Destroy any existing DataTable instance
                         responsive: true,
+                        scrollX: false, // Disable horizontal scrolling
+                        autoWidth: false,
+                        width: '100%',
                         data: res.data,
                         columns: [
                             { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
@@ -154,6 +157,12 @@ const Iuran = () => {
                             },
                         ],
                         createdRow: function (row, data, dataIndex) {
+                            // Add rounded corners to each cell in the row
+                            $(row).find('td').css('border-radius', '10px');
+    
+                            // ... your existing createdRow function ...
+                        },
+                        createdRow: function (row, data, dataIndex) {
                             // Set text color based on the "Status" value
                             const status = data.Status;
                             const expired = data.Expired;
@@ -175,6 +184,11 @@ const Iuran = () => {
                     });
                     const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
                     searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+                    searchInput.css({
+                        'text-align': 'left',
+                        'margin-right': '3px', // Optional: Adjust the margin as needed
+                        'width': '200px' // Optional: Adjust the width as needed
+                    });
                     $(tableRef.current).on('click', '.delete-button', function() {
                         const id = $(this).data('id');
                         handleDelete(id);
@@ -278,6 +292,35 @@ const Iuran = () => {
             }
         });
     };
+    const handleDeleteAll = () => {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.delete(`http://localhost:8081/deleteall/${Month}/${Year}`);
+                Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat update data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak diupdate.', 'info');
+            }
+        });
+    };
+
     function handleEditModal(e, f, g, h) {
         axios.get(`http://localhost:8081/iuran/${Month}/${Year}/${id}`)
             .then(res => {
@@ -341,6 +384,10 @@ const Iuran = () => {
                     <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md' onClick={handleCancelExpired}>
                     <FaCirclePlus />
                     <p className="text-xs hidden xs:block">Cancel Expired</p>
+                    </button>
+                    <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md' onClick={handleDeleteAll}>
+                    <FaCirclePlus />
+                    <p className="text-xs hidden xs:block">Delete All</p>
                     </button>
                 </div>  
                 <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">

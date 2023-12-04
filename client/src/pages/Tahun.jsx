@@ -12,6 +12,8 @@ import 'datatables.net'; // Import DataTables
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { renderToStaticMarkup } from 'react-dom/server';
+import 'datatables.net-plugins/sorting/natural';
+
 
 const Tahun = () => {
     const [showModal, setShowModal] = useState(false);
@@ -38,12 +40,14 @@ const Tahun = () => {
     }
 
     useEffect(() => {
+        let counter = 1;
         axios.get(`http://localhost:8081/tahun/${id}`)
             .then(res => {
                 console.log(res.data); // Log the received data
                 setMonth(res.data);
 
                 if (tableRef.current) {
+                    
                     let bulan, tahun;
                     
                     $(tableRef.current).DataTable({
@@ -51,9 +55,14 @@ const Tahun = () => {
                         data: res.data,
                         searching: false, // Hide search bar
                         lengthChange: false, // Hide show entries dropdown
+                        pageLength: 12, // Set the number of rows per page
+                        paging: false, // Disable pagination
+                        info: false, 
+                        scrollX: false, // Disable horizontal scrolling
+                        autoWidth: false,
                         columns: [
                             { title: 'No', render: function (data, type, row, meta) {
-                                return meta.row + 1;
+                                return counter++;
                             } },
                             { title: 'Bulan', data: 'bulan'},
                             { title: 'Tahun', data: 'tahun'},
@@ -202,7 +211,7 @@ const Tahun = () => {
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="bulan" className="text-sm font-medium">Bulan</label>
-                                    <select type="number" placeholder="Input bulan" required onChange={e => setMonth(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
+                                    <select type="text" placeholder="Input bulan" required onChange={e => setMonth(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
                                     <option value="" disabled selected>Select Month...</option>
                                     <option value="Januari">Januari</option>
                                     <option value="Februari">Februari</option>
@@ -219,13 +228,13 @@ const Tahun = () => {
                                     </select>
                                 </div>
                             </div>
-
+{/* 
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
                                 <label hidden htmlFor="Tahun" className="text-sm font-medium">Tahun</label>
                                 <input hidden type = "number" className='form-control' value={id} readonly disabled onChange={e => setYear(e.target.value)}/>
                                 </div>
-                                </div>
+                                </div> */}
 
                             <div className="flex justify-end">
                                 <button type="submit" className="bg-green-500 text-[#FFFFFF] text-sm font-medium px-5 py-2 rounded-md">Tambah</button>
