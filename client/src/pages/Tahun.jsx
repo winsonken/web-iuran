@@ -12,8 +12,6 @@ import 'datatables.net'; // Import DataTables
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { renderToStaticMarkup } from 'react-dom/server';
-import 'datatables.net-plugins/sorting/natural';
-
 
 const Tahun = () => {
     const [showModal, setShowModal] = useState(false);
