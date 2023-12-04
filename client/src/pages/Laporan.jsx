@@ -198,8 +198,8 @@ const Laporan = () => {
             <ModalForm id="create-modal" modalType={modal} showModal={showModal} setShowModal={setShowModal} title="Tambah data laporan tahunan">
                 <div>
                     <form onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-5">
-                            <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-5">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="tahun" className="text-sm font-medium">Tahun</label>
                                     <select type="number" placeholder="Input tahun" required onChange={e => handleSelectChange(e)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">

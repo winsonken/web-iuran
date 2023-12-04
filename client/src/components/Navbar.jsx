@@ -9,7 +9,7 @@ import { FiLogOut } from "react-icons/fi";
 const Navbar = (props) => {
   const [logoutOpen, setLogoutOpen] = useState(false);
   return (
-    <div className={`bg-[#FFFFFF] p-3 flex justify-end fixed right-0 border-b-2 border-[#E8E8E8] duration-300 ${props.menuOpen ? "w-[calc(100%-50px)]" : "w-[calc(100%-50px)] md:w-[calc(100%-20%)]"}`}>
+    <div className={`bg-[#FFFFFF] p-3 z-10 flex justify-end fixed right-0 border-b-2 border-[#E8E8E8] duration-300 ${props.menuOpen ? "w-[calc(100%-50px)]" : "w-[calc(100%-50px)] md:w-[calc(100%-20%)]"}`}>
 
         <div className="flex justify-center items-center gap-2 cursor-pointer" onClick={() => setLogoutOpen(!logoutOpen) }>
             <FaUserCircle className="text-xl md:text-2xl text-main-orange" />

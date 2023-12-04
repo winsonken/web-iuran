@@ -224,7 +224,7 @@ const Datapetugas = () => {
                 <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
                     <div className="p-3">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example  ">
+                        <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange rounded-md overflow-hidden" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
                                         <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
