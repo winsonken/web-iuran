@@ -11,6 +11,7 @@ import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
 import 'datatables.net'; // Import DataTables
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 const Tahun = () => {
     const [showModal, setShowModal] = useState(false);
@@ -43,28 +44,56 @@ const Tahun = () => {
                 setMonth(res.data);
 
                 if (tableRef.current) {
+                    let bulan, tahun;
+                    
                     $(tableRef.current).DataTable({
                         destroy: true, // Destroy any existing DataTable instance
                         data: res.data,
+                        searching: false, // Hide search bar
+                        lengthChange: false, // Hide show entries dropdown
                         columns: [
                             { title: 'No', render: function (data, type, row, meta) {
                                 return meta.row + 1;
                             } },
                             { title: 'Bulan', data: 'bulan'},
                             { title: 'Tahun', data: 'tahun'},
+                            { title: 'Details', render: function (data, type, row, meta) {
+                                const id = row.ID;
+                                bulan = row.bulan; // replace 'id' with the actual field name from your data
+                                tahun = row.tahun; // replace 'tahun' with the actual field name from your data
+                                return `
+                                    <a href="/iuran/${bulan}/${tahun}">Open</a>
+                                `;
+                            },},
                             {
                                 title: 'Aksi',
                                 render: function (data, type, row, meta) {
                                     const id = row.ID;
-                                    const bulan = row.bulan; // replace 'id' with the actual field name from your data
-                                    const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
-                                    return `
-                                        <a href="/iuran/${bulan}/${tahun}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
-                                        <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
-                                    `;
+                            
+                                    const handleDeleteClick = () => {
+                                        const id = $(this).data('id');
+                                        handleDelete(id);
+                                    };
+                            
+                                    const deleteButton = (
+                                        <button
+                                            className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                            onClick={handleDeleteClick}
+                                        >
+                                            <MdDelete />
+                                        </button>
+                                    );
+                            
+                                    return renderToStaticMarkup(deleteButton);
                                 },
                             },
                         ],
+                        createdRow: function (row, data, dataIndex) {
+                            // Set text color based on the "Status" value
+                            const statusCell = $('td:eq(3)', row); // Change 4 to the correct index of the "Status" column
+                                statusCell.css('color', '#4FAC16'); // Set text color to green
+                                statusCell.html(`<a href="/iuran/${bulan}/${tahun}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
+                            },
                     });
                     const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
                     searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
@@ -147,6 +176,7 @@ const Tahun = () => {
                                         <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
                                         <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Tahun</th>
                                         <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Bulan</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Detail</th>
                                         <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Aksi</th>
                                     </tr>
                                 </thead>

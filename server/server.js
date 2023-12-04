@@ -379,16 +379,29 @@ app.post("/iuran/:bulan/:tahun", async (req, res) => {
                 NominalValue,
                 ExpiredValue // Set to your desired default value for Nominal
             ];
-
-            await new Promise((resolve, reject) => {
-                db.query(sqlInsert, values, (err, result) => {
+            const existingRecord = await new Promise((resolve, reject) => {
+                const selectSql = "SELECT * FROM datalaporan WHERE KK = ? AND Month = ? AND Year = ?";
+                db.query(selectSql, [row.KK, Month, Year], (err, result) => {
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(result);
+                        resolve(result[0]); // Use only the first result if any
                     }
                 });
             });
+        
+            if (!existingRecord) {
+                // If no existing record, insert a new record
+                await new Promise((resolve, reject) => {
+                    db.query(sqlInsert, values, (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            }
         }
 
         res.json({ success: true, message: "Data inserted successfully." });

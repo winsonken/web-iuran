@@ -13,6 +13,7 @@ import moment from 'moment';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 const Iuran = () => {
     // Show or Hide Modal
@@ -100,10 +101,19 @@ const Iuran = () => {
                                         const nominal = row && row.Nominal; // Check if row is defined before accessing ID
                                         const date = row && row.Date; // Check if row is defined before accessing ID
                                         console.log("ID:", id); // Log the extracted ID
-                                        return `
-                                            
-                                        <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
-                                        `;
+                                        const handleDeleteClick = () => {
+                                            const id = $(this).data('id');
+                                            handleDelete(id);
+                                        };
+                                        const deleteButton = (
+                                            <button
+                                                className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                                onClick={handleDeleteClick}
+                                            >
+                                                <MdDelete />
+                                            </button>
+                                        );
+                                        return renderToStaticMarkup(deleteButton);
                                     } else {
                                         console.log("Row Data:", row); // Log the entire row to inspect its structure
                                         const id = row && row.ID; // Check if row is defined before accessing ID
@@ -111,10 +121,24 @@ const Iuran = () => {
                                         const nominal = row && row.Nominal; // Check if row is defined before accessing ID
                                         const date = row && row.Date; // Check if row is defined before accessing ID
                                         console.log("ID:", id); // Log the extracted ID
-                                        return `
-                                            <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-outline-success btn-block btn-flat update-button'>Update</button>
-                                            <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
-                                        `;
+                                        const actionButtons = (
+                                            <div>
+                                              <button
+                                                className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nama={nama} data-date={moment(date).format('YYYY-MM-DD')} data-nominal = {nominal}
+                                              >
+                                                <FaEdit />
+                                              </button>
+                                              <span style={{ marginRight: '8px' }}></span>
+                                              <button
+                                                className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                              >
+                                                <MdDelete />
+                                              </button>
+
+                                            </div>
+                                          );
+                                      
+                                          return renderToStaticMarkup(actionButtons);
                                     }
                                     console.log("Row Data:", row); // Log the entire row to inspect its structure
                                     const id = row && row.ID; // Check if row is defined before accessing ID
@@ -124,7 +148,7 @@ const Iuran = () => {
                                     console.log("ID:", id); // Log the extracted ID
                                     return `
                                         <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-success update-button'>Update</button>
-                                        <button class='btn btn-danger delete-button' data-id=${id}>Delete</button>
+                                        
                                     `;
                                 },
                             },

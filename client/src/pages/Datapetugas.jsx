@@ -13,6 +13,7 @@ import moment from 'moment';
 import {Link} from 'react-router-dom'
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 
 const Datapetugas = () => {
@@ -60,10 +61,24 @@ const Datapetugas = () => {
                             const gender = row && row.Gender; // Check if row is defined before accessing ID
                             const status = row && row.Status; // Check if row is defined before accessing ID
                             console.log("ID:", id); // Log the extracted ID
-                            return `
-                                <button data-id=${id} data-iduser=${iduser} data-nama=${nama} data-nik=${nik} data-gender=${gender} data-status=${status} data-pass=${pass} class='btn btn-outline-success btn-block btn-flat update-button'">Update</button>
-                                <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id} >Delete</button>
-                            `;
+                            const actionButtons = (
+                                <div>
+                                  <button
+                                    className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-iduser={iduser} data-nama={nama} data-nik={nik} data-gender={gender} data-status={status} data-pass={pass}
+                                  >
+                                    <FaEdit />
+                                  </button>
+                                  <span style={{ marginRight: '8px' }}></span>
+                                  <button
+                                    className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                  >
+                                    <MdDelete />
+                                  </button>
+
+                                </div>
+                              );
+                          
+                              return renderToStaticMarkup(actionButtons);
                         },
                     },
                 ],
@@ -208,9 +223,9 @@ const Datapetugas = () => {
                                         <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
                                         <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">No.NIK</th>
                                         <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Nama</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Gender</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Status</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Aksi</th>
+                                        <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">Gender</th>
+                                        <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">Status</th>
+                                        <th scope="col" className="whitespace-nowrap px-4 text-center align-middle ">Aksi</th>
                                     </tr>
                                 </thead>
 

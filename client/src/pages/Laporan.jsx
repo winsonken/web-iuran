@@ -9,7 +9,9 @@ import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
 import 'datatables.net'; // Import DataTables\
 import $ from 'jquery';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Swal from 'sweetalert2';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 
 const Laporan = () => {
@@ -45,24 +47,50 @@ const Laporan = () => {
             $(tableRef.current).DataTable({
                 destroy: true, // Destroy any existing DataTable instance
                 data: year,
+                searching: false, // Hide search bar
+                lengthChange: false, // Hide show entries dropdown
                 columns: [
                     { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
                         return counter++;
                     } },
-                    { title: 'ID', data: 'ID', visible: false  },
                     { title: 'Tahun', data: 'years'},
+                    { title: 'Details', render: function (data, type, row, meta) {
+                        const id = row.ID; // replace 'id' with the actual field name from your data
+                        const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
+                        return `
+                            <a href="/tahun/${id}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
+                        `;
+                    },},
                     {
-                        title: 'Action',
+                        title: 'Aksi',
                         render: function (data, type, row, meta) {
-                            const id = row.ID; // replace 'id' with the actual field name from your data
-                            const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
-                            return `
-                                <a href="/tahun/${id}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
-                                <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
-                            `;
+                            const id = row.ID;
+                            const tahun = row.years;
+                    
+                            const handleDeleteClick = () => {
+                                const id = $(this).data('id');
+                                handleDelete(id);
+                            };
+                    
+                            const deleteButton = (
+                                <button
+                                    className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                    onClick={handleDeleteClick}
+                                >
+                                    <MdDelete />
+                                </button>
+                            );
+                    
+                            return renderToStaticMarkup(deleteButton);
                         },
                     },
                 ],
+                createdRow: function (row, data, dataIndex) {
+                    // Set text color based on the "Status" value
+                    const statusCell = $('td:eq(2)', row); // Change 4 to the correct index of the "Status" column
+                        statusCell.css('color', '#4FAC16'); // Set text color to green
+                        statusCell.html(`<a href="/tahun/${data.ID}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
+                    },
             });
             const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
             searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed

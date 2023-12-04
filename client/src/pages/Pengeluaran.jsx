@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 
 const Pengeluaran = () => {
@@ -54,10 +55,24 @@ const Pengeluaran = () => {
                             const nominal = row && row.Nominal; // Check if row is defined before accessing ID
                             const keterangan = row && row.Keterangan; // Check if row is defined before accessing ID
                             console.log("ID:", id); // Log the extracted ID
-                            return `
-                                <button data-id=${id} data-nominal=${nominal} data-keterangan=${keterangan} class='btn btn-outline-success btn-block btn-flat update-button'">Update</button>
-                                <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id} >Delete</button>
-                            `;
+                            const actionButtons = (
+                                <div>
+                                  <button
+                                    className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nominal = {nominal} data-keterangan = {keterangan}
+                                  >
+                                    <FaEdit />
+                                  </button>
+                                  <span style={{ marginRight: '8px' }}></span>
+                                  <button
+                                    className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                  >
+                                    <MdDelete />
+                                  </button>
+
+                                </div>
+                              );
+                          
+                              return renderToStaticMarkup(actionButtons);
                         },
                     },
                 ],
