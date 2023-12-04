@@ -157,12 +157,6 @@ const Iuran = () => {
                             },
                         ],
                         createdRow: function (row, data, dataIndex) {
-                            // Add rounded corners to each cell in the row
-                            $(row).find('td').css('border-radius', '10px');
-    
-                            // ... your existing createdRow function ...
-                        },
-                        createdRow: function (row, data, dataIndex) {
                             // Set text color based on the "Status" value
                             const status = data.Status;
                             const expired = data.Expired;

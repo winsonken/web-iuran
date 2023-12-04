@@ -258,16 +258,16 @@ const Datapetugas = () => {
                         <div className="flex flex-col gap-5">
                             <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
                             <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nama-petugas" className="text-sm font-medium">ID</label>
-                                    <input type="text"  placeholder="Input ID petugas" required onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Username</label>
+                                    <input type="text"  placeholder="Input Username" required onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">Password</label>
-                                    <input type="password"  placeholder="Input Password petugas" required onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="password"  placeholder="Input Password" required onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">NIK</label>
-                                    <input type="number" placeholder="Input NIK petugas" required onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Input NIK" onInput={(e) => e.target.value = e.target.value.slice(0, 16)} required onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
 
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
@@ -315,7 +315,7 @@ const Datapetugas = () => {
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">NIK</label>
-                                    <input type="number" placeholder="Input NIK petugas" required value = {nik} onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Input NIK petugas" onInput={(e) => e.target.value = e.target.value.slice(0, 16)} required value = {nik} onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
 
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
