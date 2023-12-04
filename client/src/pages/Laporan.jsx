@@ -202,8 +202,8 @@ const Laporan = () => {
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="tahun" className="text-sm font-medium">Tahun</label>
-                                    <select type="number" placeholder="Input tahun" onChange={e => handleSelectChange(e)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="0" disabled selected>Select Year...</option>
+                                    <select type="number" placeholder="Input tahun" required onChange={e => handleSelectChange(e)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
+                                    <option value="" disabled selected>Select Year...</option>
                                     <option value="2023">2023</option>
                                     <option value="2024">2024</option>
                                     <option value="2025">2025</option>

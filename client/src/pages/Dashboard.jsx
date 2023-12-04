@@ -41,11 +41,15 @@ const Dashboard = () => {
     const formattedTotalNominal = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
+        minimumFractionDigits: 0, // Set minimumFractionDigits to 0 to remove cents
+        maximumFractionDigits: 0, // Set maximumFractionDigits to 0 to remove cents
     }).format(totalNominal);
-
+    
     const formattedTotalNominalPengeluaran = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
+        minimumFractionDigits: 0, // Set minimumFractionDigits to 0 to remove cents
+        maximumFractionDigits: 0, // Set maximumFractionDigits to 0 to remove cents
     }).format(totalNominalpengeluaran);
 
 
