@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import axios from 'axios';
+import $ from 'jquery';
+import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
+import 'datatables.net'; // Import DataTables
 import Layout from '../Layout/Layout'
 import ModalForm from '../components/ModalForm';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import moment from 'moment';
+import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Iuran = () => {
     // Show or Hide Modal
@@ -12,16 +20,270 @@ const Iuran = () => {
     // Set Modal Type
     const [modal, setModal] = useState("");
     const [namaWarga, setNamaWarga] = useState(0);
-    const [nominal, setNominal] = useState(0);
     const [status, setStatus] = useState("");
     const [warga, setWarga] = useState("");
-
+    const { Month, Year } = useParams();
+    const [student, setStudent] = useState([]);
+    const tableRef = useRef(null);
+    const [nama, setNama] = useState('')
+    const [month, setMonth] = useState('')
+    const [year, setYear] = useState('')
+    const [date, SetDate] = useState('')
+    const [nominal, SetNominal] = useState('')
+    const [id, setId] = useState('')
+    const [laporan, setLaporan] = useState({}); 
     const navigate = useNavigate();
-    
-    function handleSubmit(e) {
-        e.preventDefault();
-        navigate("/iuran");
+
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        navigate(`/iuran/${Month}/${Year}`);
         setShowModal(!showModal);
+        axios.post(`http://localhost:8081/iuran/${Month}/${Year}`, {nama, month, year, date, nominal})
+        .then(res => {
+            console.log(res);
+            Swal.fire('Berhasil', 'Data telah berhasil ditambah.', 'success').then(() => {
+                window.location.reload();
+            });
+        }).catch(err => console.log(err));
+    }
+
+    
+    useEffect(() => {
+        let counter = 1;
+        axios.get(`http://localhost:8081/iuran/${Month}/${Year}`)
+            .then(res => {
+                console.log(res.data); // Log the received data
+                setStudent(res.data);
+
+                if (tableRef.current) {
+                    $(tableRef.current).DataTable({
+                        destroy: true, // Destroy any existing DataTable instance
+                        responsive: true,
+                        data: res.data,
+                        columns: [
+                            { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                                return counter++;
+                            } },
+                            { title: 'No KK', data: 'KK' },
+                            { title: 'Nama', data: 'Nama' },
+                            { title: 'Status', data: 'Status', 
+                                render: function(data, type, row) {
+                                if (row.Expired === 'OVERDUE') {
+                                    return 'Overdue';
+                                } else {
+                                    return data;
+                                }
+                            }},
+                            { title: 'Date', data: 'Date', render: function(data, type, row) {
+        
+                                const momentDate = moment(data);
+                                // Assuming 'Month' is your date column
+                                if (momentDate.isValid()) {
+                                    return momentDate.format('DD-MM-YYYY'); // Adjust the format as needed
+                                } else {
+                                    return 'Belum ada'; // Return empty string for invalid dates
+                                }
+                            } },
+                            { title: 'Nominal', data: 'Nominal', render: function(data, type, row) {
+                                // Format the Nominal column as currency
+                                const formattedNominal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data);
+                                return formattedNominal;
+                            } },
+                            {
+                                title: 'Action',
+                                render: function (data, type, row, meta) {
+                                    if (row.Expired === 'OVERDUE') {
+                                        console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                        const id = row && row.ID; // Check if row is defined before accessing ID
+                                        const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                        const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+                                        const date = row && row.Date; // Check if row is defined before accessing ID
+                                        console.log("ID:", id); // Log the extracted ID
+                                        return `
+                                            
+                                        <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
+                                        `;
+                                    } else {
+                                        console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                        const id = row && row.ID; // Check if row is defined before accessing ID
+                                        const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                        const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+                                        const date = row && row.Date; // Check if row is defined before accessing ID
+                                        console.log("ID:", id); // Log the extracted ID
+                                        return `
+                                            <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-outline-success btn-block btn-flat update-button'>Update</button>
+                                            <button class='btn btn-outline-danger btn-block btn-flat delete-button' data-id=${id}>Delete</button>
+                                        `;
+                                    }
+                                    console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                    const id = row && row.ID; // Check if row is defined before accessing ID
+                                    const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                    const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+                                    const date = row && row.Date; // Check if row is defined before accessing ID
+                                    console.log("ID:", id); // Log the extracted ID
+                                    return `
+                                        <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-success update-button'>Update</button>
+                                        <button class='btn btn-danger delete-button' data-id=${id}>Delete</button>
+                                    `;
+                                },
+                            },
+                        ],
+                        createdRow: function (row, data, dataIndex) {
+                            // Set text color based on the "Status" value
+                            const status = data.Status;
+                            const expired = data.Expired;
+                            const statusCell = $('td:eq(3)', row); // Change 4 to the correct index of the "Status" column
+            
+                            if (status === 'Lunas') {
+                                statusCell.css('color', '#4FAC16'); // Set text color to green
+                                statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                            } else if (status === 'On Going' && expired === 'NONE') {
+                                statusCell.css('color', 'red'); // Set text color to red
+                                // You might want to remove the custom class if status is not "Active"
+                                statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                            } else if (expired === 'OVERDUE') {
+                                statusCell.css('color', 'red'); // Set text color to red
+                                // You might want to remove the custom class if status is not "Active"
+                                statusCell.html(`<span class="bg-[#7a7979] text-[#000000] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Over Due</span>`);
+                            }
+                        },
+                    });
+                    const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                    searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+                    $(tableRef.current).on('click', '.delete-button', function() {
+                        const id = $(this).data('id');
+                        handleDelete(id);
+                    });
+                    $(tableRef.current).on('click', '.update-button', function() {
+                        const e = $(this).data('id');
+                        const f = $(this).data('nama');
+                        const g = $(this).data('nominal');
+                        const h = $(this).data('date');
+                        handleEditModal(e, f, g, h);
+                    });
+                }
+            })
+            .catch(err => console.error(err));
+    }, [Month, Year]);
+
+    const handleDelete = async (id) => {
+        // Use SweetAlert to show a confirmation dialog
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.delete(`http://localhost:8081/deletelaporan/${id}`);
+                Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak dihapus.', 'info');
+            }
+        });
+    };
+
+    const handleExpired = () => {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.put(`http://localhost:8081/iuran/${Month}/${Year}/updateStatus`);
+                Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat update data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak diupdate.', 'info');
+            }
+        });
+    };
+
+    const handleCancelExpired = () => {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikan ini!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                // Perform the delete operation if the user confirms
+                await axios.put(`http://localhost:8081/iuran/${Month}/${Year}/updateStatusCancel`);
+                Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                    window.location.reload();
+                });
+                }   catch (err) {
+                    console.error('Error in DELETE request:', err);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat update data.', 'error');
+                }  
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Dibatalkan', 'Data tidak diupdate.', 'info');
+            }
+        });
+    };
+    function handleEditModal(e, f, g, h) {
+        axios.get(`http://localhost:8081/iuran/${Month}/${Year}/${id}`)
+            .then(res => {
+                setId(e || '');
+                setNama(f || '');
+                SetNominal(g || '');
+                SetDate(moment(h).format('YYYY-MM-DD') || '');
+        }).catch(err => console.log(err));
+            setShowModal(!showModal);
+            setModal("edit-modal");
+
+    };
+
+    useEffect(() => {
+        axios.get(`http://localhost:8081/iuran/${Month}/${Year}/${id}`)
+            .then(res => {
+                console.log(res.data); // Log the received data
+                setLaporan(res.data);
+            })
+            .catch(err => console.log(err));
+    }, [id]);
+
+    function handleSubmita(event) {
+        event.preventDefault();
+        axios.put(`http://localhost:8081/iuran/${Month}/${Year}/${id}`, {nama, date, nominal})
+        .then(res => {
+            Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                window.location.reload();
+            });
+        }).catch(err => console.log(err));
     }
 
     function handleAddModal() {
@@ -29,63 +291,55 @@ const Iuran = () => {
         setModal("create-modal");
     }
 
-    function handleEditModal() {
-        setShowModal(!showModal);
-        setModal("edit-modal");
-    }
+    // function handleEditModal() {
+    //     setShowModal(!showModal);
+    //     setModal("edit-modal");
+    // }
 
     function handleDeleteModal() {
-        setShowModal(!showModal);
-        setModal("delete-modal");
+
     }
 
     return (
         <Layout>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
-                    <h1 className="text-xl text-[#222222] font-medium">Laporan Iuran tahun 2023 bulan Januari</h1>
+                    <h1 className="text-xl text-[#222222] font-medium">Laporan Iuran Tahun {Year} Bulan {Month}</h1>
                     
                     <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
                         <FaCirclePlus />
                         <p className="text-xs hidden xs:block">Tambah warga</p>
                     </button>
+                    <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md' onClick={handleExpired}>
+                    <FaCirclePlus />
+                    <p className="text-xs hidden xs:block">Expired</p>
+                    </button>
+                    <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md' onClick={handleCancelExpired}>
+                    <FaCirclePlus />
+                    <p className="text-xs hidden xs:block">Cancel Expired</p>
+                    </button>
                 </div>  
-
                 <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
                     <div className="p-3">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table className="w-full min-w-full table-auto text-left border border-main-orange">
+                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
-                                        <th scope="col" className="whitespace-nowrap px-2 ">No</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nama warga</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">No. KK</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Nominal pembayaran</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Status</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 ">Aksi</th>
+                                        
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">No</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">No. KK</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Nama</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Status</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Date</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Nominal</th>
+                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle">Aksi</th>
                                     </tr>
+                                    
                                 </thead>
 
                                 <tbody className="font-medium text-xs text-center">
                                     <tr className="border border-b border-main-orange">
-                                        <td className="whitespace-nowrap px-2 py-3 ">1</td>
-                                        <td className="whitespace-nowrap px-3 py-3">Sunoto</td>
-                                        <td className="whitespace-nowrap px-3 py-3">123456789</td>
-                                        <td className="whitespace-nowrap px-3 py-3">Rp. 0</td>
-                                        <td className="whitespace-nowrap px-3 py-3 ">
-                                            <Link to="/iuran">
-                                                <div className="bg-[#DCFDD4] text-[#4FAC16] w-fit px-5 py-1 rounded-full m-auto">
-                                                    <p className="text-xs">Lunas</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="whitespace-nowrap px-3 py-3">
-                                            <div className="flex justify-center items-center text-2xl cursor-pointer gap-3">
-                                                <FaEdit className="text-yellow-500" onClick={handleEditModal} />
-                                                <MdDelete className="text-red-500" onClick={handleDeleteModal} />
-                                            </div>
                                         
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -103,11 +357,14 @@ const Iuran = () => {
                         <div className="flex flex-col gap-5">
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
-                                    <label htmlFor="warga" className="text-sm font-medium">Warga</label>
-                                    <select name="warga" id="warga" value={warga} onChange={e => { setWarga(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                        <option selected hidden>Pilih warga</option>
-                                        <option value="sunoto">Sunoto</option>
-                                    </select>
+                                    <label htmlFor="warga" className="text-sm font-medium">Bulan</label>
+                                    <input type = "text" value={Month} readonly disabled onChange={e => setMonth(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex flex-col gap-2">
+                                    <label htmlFor="warga" className="text-sm font-medium">Tahun</label>
+                                    <input type = "text" value={Year} readonly disabled onChange={e => setYear(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                             </div>
 
@@ -121,24 +378,20 @@ const Iuran = () => {
 
             <ModalForm id="edit-modal" modalType={modal} showModal={showModal} setShowModal={setShowModal} title="Ubah data laporan">
                 <div>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmita}>
                         <div className="flex flex-col gap-5">
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="nama-warga" className="text-sm font-medium">Nama warga</label>
-                                    <input type="number" id="nama-warga" value={namaWarga} placeholder="Input nama warga" onChange={e => { setNamaWarga(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="nama-warga" value={nama} placeholder="Input nama warga" onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="nominal" className="text-sm font-medium">Nominal pembayaran</label>
-                                    <input type="number" id="nominal" value={nominal} placeholder="Input nominal" onChange={e => { setNominal(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" id="nominal" value={nominal} placeholder="Input nominal" onChange={e => SetNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <label htmlFor="status" className="text-sm font-medium">Status</label>
-                                    <select name="status" id="status" value={status} onChange={e => { setStatus(e.target.value)}} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                        <option selected hidden>Pilih status</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="tidak-aktif">Tidak aktif</option>
-                                    </select>
+                                    <label htmlFor="date" className="text-sm font-medium">Tanggal pembayaran</label>
+                                    <input type="date" id="date" value={date} placeholder="Input nominal" onChange={e => SetDate(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                             </div>
 
@@ -152,7 +405,7 @@ const Iuran = () => {
 
             <ModalForm id="delete-modal"  modalType={modal} showModal={showModal} setShowModal={setShowModal} title="Hapus data laporan tahun 2023">
                 <div>
-                    <form onSubmit={handleSubmit}>
+                    <form>
                         <div className="flex flex-col gap-5">
                             <div>
                                 <p className="text-sm">Apakah anda yakin ingin menghapus data ini?</p>
