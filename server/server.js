@@ -101,7 +101,7 @@ app.get("/data-petugas", (req,res) => {
 })
 
 app.get("/dashboard", (req,res) => {
-    const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going'";
+    const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
         return res.json(data);

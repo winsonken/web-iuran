@@ -1,5 +1,6 @@
 import React from 'react'
 import loginImage from '../assets/login-img.jpg'
+import { Link, useParams } from 'react-router-dom';
 
 const Login = () => {
   return (
@@ -22,7 +23,7 @@ const Login = () => {
             </div>
 
             <div className="w-full flex justify-center">
-              <button className="bg-second-orange w-full sm:w-3/4 text-sm text-[#FFFFFF] rounded-lg px-3 py-1 xs:text-base">Login</button>
+              <Link to={`/dashboard`} className="bg-second-orange w-full sm:w-3/4 text-sm text-[#FFFFFF] rounded-lg px-3 py-1 xs:text-base text-center align-middle">Login</Link>
             </div>
           </form>
         </div>

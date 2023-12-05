@@ -73,7 +73,7 @@ const Tahun = () => {
                                 `;
                             },},
                             {
-                                title: 'Aksi',
+                                title: 'Action',
                                 render: function (data, type, row, meta) {
                                     const id = row.ID;
                             
@@ -174,8 +174,8 @@ const Tahun = () => {
                     </button>
                 </div>  
 
-                <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
-                    <div className="p-3">
+                <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
+                    <div className="p-3 text-left border border-main-orange rounded-md overflow-hidden">
                         <div className="overflow-x-auto rounded-t-md">
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">

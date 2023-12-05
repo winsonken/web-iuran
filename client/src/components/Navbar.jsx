@@ -5,6 +5,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { RxChevronDown } from "react-icons/rx";
 import { GiPayMoney } from "react-icons/gi";
 import { FiLogOut } from "react-icons/fi";
+import { Link, useParams } from 'react-router-dom';
 
 const Navbar = (props) => {
   const [logoutOpen, setLogoutOpen] = useState(false);
@@ -23,7 +24,7 @@ const Navbar = (props) => {
               <p className="text-sm font-medium xs:hidden">Username</p>
               <div className="flex flex-row items-center gap-1">
                 <FiLogOut className="text-main-orange" />
-                <p className="text-sm">Logout</p>
+                <Link to={`/login`} className="text-sm">Logout</Link>
               </div>
             </div>
           </div>
