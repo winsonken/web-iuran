@@ -220,7 +220,7 @@ const Datawarga = () => {
         <Layout>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
-                    <h1 className="text-xl text-[#222222] font-medium">Data warga</h1>
+                    <h1 className="text-xl font-bold text-main-orange">Data warga</h1>
                     
                     <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
                         <FaCirclePlus />

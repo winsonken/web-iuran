@@ -375,7 +375,7 @@ const Iuran = () => {
         <Layout>
             <div className="flex flex-col gap-5">
                 <div className="flex flex-row justify-between items-center">
-                    <h1 className="text-xl text-[#222222] font-medium">Laporan Iuran Tahun {Year} Bulan {Month}</h1>
+                    <h1 className="text-xl font-bold text-main-orange">Laporan Iuran Tahun {Year} Bulan {Month}</h1>
                     
                     <div className="flex flex-row flex-wrap gap-2">
                         <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md" onClick={handleAddModal}>
