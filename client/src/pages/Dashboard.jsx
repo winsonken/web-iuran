@@ -97,11 +97,11 @@ const Dashboard = () => {
     
                     if (status === 'Lunas') {
                         statusCell.css('color', '#4FAC16'); // Set text color to green
-                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
                     } else if (status === 'On Going') {
                         statusCell.css('color', 'red'); // Set text color to red
                         // You might want to remove the custom class if status is not "Active"
-                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Belum Lunas</span>`);
                     }
                 },
             });
@@ -125,7 +125,7 @@ const Dashboard = () => {
     <Layout>
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">
-                <h1 className="text-xl text-[#222222] font-medium">Admin dashboard</h1>
+                <h1 className="text-xl font-bold text-main-orange">Dashboard Admin</h1>
 
                 <div className="flex gap-3 justify-center lg:justify-between flex-wrap w-full h-100">
                     <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-1/3">

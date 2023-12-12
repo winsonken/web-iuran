@@ -11,13 +11,15 @@ import Datawarga from './pages/Datawarga'
 import Iuran from './pages/Iuran'
 
 function App() {
-  
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
+      
+          <Route path="/" element={<Login />}>
+            <Route path="/login" element={<Login />} />
+          </Route>
+          
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/laporan" element={<Laporan />} />
           <Route path="/tahun/:id" element={<Tahun />} />

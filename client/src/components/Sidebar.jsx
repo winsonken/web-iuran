@@ -39,7 +39,7 @@ const Sidebar = (props) => {
     const path = location.pathname;
     
   return (
-    <div className={`${props.className} ${props.menuOpen ? "w-1/2 xs:w-2/5 sm:w-1/3 md:w-[50px]" : "w-[50px] md:w-1/5"} bg-[#FFFFFF] z-10 h-screen fixed md:fixed duration-300 flex flex-col justify-start ${props.menuOpen ? "items-start" : "items-center"} border-r border-[#E8E8E8]`}>
+    <div className={`${props.className} ${props.menuOpen ? "w-1/2 xs:w-2/5 sm:w-1/3 md:w-[50px]" : "w-[50px] md:w-1/5"} bg-[#FFFFFF] z-20 h-screen fixed md:fixed duration-300 flex flex-col justify-start ${props.menuOpen ? "items-start" : "items-center"} border-r border-[#E8E8E8]`}>
         <div className="flex justify-between items-center w-full p-3">
             <h1 className={`font-bold ${props.menuOpen ? "block md:hidden" : "hidden"} text-main-orange text-xs xs:text-lg md:text-xl md:block`}>Web Iuran</h1>
 

@@ -52,7 +52,7 @@ const Datawarga = () => {
                     { title: 'Alamat', data: 'Alamat'},
                     { title: 'Status', data: 'Status'},
                     {
-                        title: 'Action',
+                        title: 'Aksi',
                         render: function (data, type, row, meta) {
                             console.log("Row Data:", row); // Log the entire row to inspect its structure
                             const id = row && row.ID; // Check if row is defined before accessing ID
@@ -89,11 +89,11 @@ const Datawarga = () => {
     
                     if (status === 'Active') {
                         statusCell.css('color', '#4FAC16'); // Set text color to green
-                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
                     } else if (status === 'Deactive') {
                         statusCell.css('color', 'red'); // Set text color to red
                         // You might want to remove the custom class if status is not "Active"
-                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Tidak Aktif</span>`);
                     }
                 },
             });
@@ -220,7 +220,7 @@ const Datawarga = () => {
         <Layout>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
-                    <h1 className="text-xl text-[#222222] font-medium">Data warga</h1>
+                    <h1 className="text-xl font-bold text-main-orange">Data warga</h1>
                     
                     <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
                         <FaCirclePlus />
@@ -266,20 +266,20 @@ const Datawarga = () => {
                             <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-warga" className="text-sm font-medium">Nama</label>
-                                    <input type="text" placeholder="Input nama Warga" required onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" placeholder="Masukkan nama Warga" required onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="kk" className="text-sm font-medium">No. KK</label>
-                                    <input type="number" placeholder="Input KK" onInput={(e) => e.target.value = e.target.value.slice(0, 16)} required onChange={e => setKK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Masukkan No.KK" onInput={(e) => e.target.value = e.target.value.slice(0, 16)} required onChange={e => setKK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow ">
                                     <label htmlFor="alamat" className="text-sm font-medium">Alamat</label>
-                                    <input type="text" placeholder="Input alamat" required onChange={e => setAlamat(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" placeholder="Masukkan alamat" required onChange={e => setAlamat(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow">
                                     <label htmlFor="status" className="text-sm font-medium">Status</label>
                                     <select name="status" id="status" required onChange={e => setStatus(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                        <option value="" disabled selected>Select Status...</option>
+                                        <option value="" disabled selected>Pilih Status...</option>
                                         <option value="Active">Aktif</option>
                                         <option value="Deactive">Tidak Aktif</option>
                                     </select>
@@ -301,22 +301,22 @@ const Datawarga = () => {
                         <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-warga" className="text-sm font-medium">Nama</label>
-                                    <input type="text" id="nama-warga" value={nama} placeholder="Input nama warga" required onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="nama-warga" value={nama} placeholder="Masukkan nama warga" required onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="kk" className="text-sm font-medium">No. KK</label>
-                                    <input type="number" id="kk" value={kk} placeholder="Input KK" required onInput={(e) => e.target.value = e.target.value.slice(0, 16)} onChange={e => setKK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" id="kk" value={kk} placeholder="Masukkan No.KK" required onInput={(e) => e.target.value = e.target.value.slice(0, 16)} onChange={e => setKK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow ">
                                     <label htmlFor="alamat" className="text-sm font-medium">Alamat</label>
-                                    <input type="text" id="alamat" value={alamat} placeholder="Input alamat" required onChange={e => setAlamat(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="alamat" value={alamat} placeholder="Masukkan alamat" required onChange={e => setAlamat(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow">
                                     <label htmlFor="status" className="text-sm font-medium">Status</label>
                                     <select name="status" id="status" value = {status} required onChange={e => setStatus(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="" disabled selected>Select Status...</option>
-                                        <option value="Active">Active</option>
-                                        <option value="Deactive">Deactive</option>
+                                    <option value="" disabled selected>Pilih Status...</option>
+                                        <option value="Active">Aktif</option>
+                                        <option value="Deactive">Tidak Aktif</option>
                                     </select>
                                 </div>
                             </div>

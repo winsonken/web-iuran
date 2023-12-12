@@ -66,7 +66,7 @@ const Laporan = () => {
                         `;
                     },},
                     {
-                        title: 'Action',
+                        title: 'Aksi',
                         render: function (data, type, row, meta) {
                             const id = row.ID;
                             const tahun = row.years;
@@ -162,7 +162,7 @@ const Laporan = () => {
         <Layout>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
-                    <h1 className="text-xl text-[#222222] font-medium">Laporan</h1>
+                    <h1 className="text-xl font-bold text-main-orange">Laporan</h1>
                     <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
                         <FaCirclePlus />
                         <p className="text-xs hidden xs:block">Tambah laporan</p>
@@ -203,7 +203,7 @@ const Laporan = () => {
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="tahun" className="text-sm font-medium">Tahun</label>
                                     <select type="number" placeholder="Input tahun" required onChange={e => handleSelectChange(e)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="" disabled selected>Select Year...</option>
+                                    <option value="" disabled selected>Pilih Tahun...</option>
                                     <option value="2023">2023</option>
                                     <option value="2024">2024</option>
                                     <option value="2025">2025</option>

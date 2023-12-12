@@ -50,7 +50,7 @@ const Pengeluaran = () => {
                     } },
                     { title: 'Keterangan', data: 'Keterangan'},
                     {
-                        title: 'Action',
+                        title: 'Aksi',
                         render: function (data, type, row, meta) {
                             console.log("Row Data:", row); // Log the entire row to inspect its structure
                             const id = row && row.ID; // Check if row is defined before accessing ID
@@ -189,7 +189,7 @@ const Pengeluaran = () => {
         <Layout>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
-                    <h1 className="text-xl text-[#222222] font-medium">Pengeluaran</h1>
+                    <h1 className="text-xl font-bold text-main-orange">Pengeluaran</h1>
                     
                     <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
                         <FaCirclePlus />
@@ -232,11 +232,11 @@ const Pengeluaran = () => {
                             <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
                                     <label htmlFor="nominal" className="text-sm font-medium">Nominal</label>
-                                    <input type="number" placeholder="Input nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Masukkan nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="keterangan" className="text-sm font-medium">Keterangan</label>
-                                    <input type="text" placeholder="Input keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" placeholder="Masukkan keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                             </div>
 
@@ -255,11 +255,11 @@ const Pengeluaran = () => {
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="nominal" className="text-sm font-medium">Nominal</label>
-                                    <input type="text" id="nominal" value={nominal} placeholder="Input nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="nominal" value={nominal} placeholder="Masukkan nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="keterangan" className="text-sm font-medium">Keterangan</label>
-                                    <input type="text" id="keterangan" value={keterangan} placeholder="Input keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="keterangan" value={keterangan} placeholder="Masukkan keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                             </div>
 

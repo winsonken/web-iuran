@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql");
 const moment = require('moment');
+const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +15,36 @@ const db = mysql.createConnection({
     password: "",
     database: "crud"
 })
+
+app.post('/login', (req, res) => {
+    const sql = "SELECT * FROM datapetugas WHERE IDuser = ?";
+    db.query(sql, [req.body.user], async (err, data) => {
+        if (err) {
+            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+        }
+
+        if (data.length > 0) {
+            const storedPassword = data[0].Password;
+
+            try {
+                const passwordMatch = await bcrypt.compare(req.body.password, storedPassword);
+            
+                if (passwordMatch) {
+                    return res.json({ status: 'success', message: 'Login Berhasil' });
+                } else {
+                    return res.status(401).json({ status: 'error', message: 'Password Salah' });
+                }
+            } catch (error) {
+                console.error('Error comparing passwords:', error);
+                return res.status(401).json({ status: 'error', message: 'Password Comparison Error' });
+            }
+        } else {
+            return res.status(401).json({ status: 'error', message: 'Akun tidak Terdaftar' });
+        }
+    });
+});
+
+
 
 app.get("/jumlah-warga", (req, res) => {
     const sql = "SELECT COUNT(*) AS jumlahWarga FROM datawarga";
@@ -134,21 +166,37 @@ app.post("/pengeluaran", (req,res) => {
     })
 })
 
-app.post("/data-petugas", (req,res) => {
-    const sql = "INSERT INTO datapetugas (`IDuser`, `Password`, `NIK`, `Nama`, `Gender`, `Status`) VALUES (?)";
-    const values = [
-        req.body.iduser,
-        req.body.pass,
-        req.body.nik,
-        req.body.nama,
-        req.body.gender,
-        req.body.status,
-    ]
-    db.query(sql, [values], (err, data) => {
-        if(err) return res.json("Error");
-        return res.json(data);
-    })
-})
+app.post("/data-petugas", async (req, res) => {
+    try {
+        // Generate salt and hash asynchronously
+        const salt = await bcryptjs.genSalt(12);
+        const hash = await bcryptjs.hash(req.body.pass, salt);
+
+        // SQL query with placeholders
+        const sql = "INSERT INTO datapetugas (`IDuser`, `Password`, `NIK`, `Nama`, `Gender`, `Status`) VALUES (?, ?, ?, ?, ?, ?)";
+
+        // Values for the placeholders
+        const values = [
+            req.body.iduser,
+            hash, // Use the hashed password here
+            req.body.nik,
+            req.body.nama,
+            req.body.gender,
+            req.body.status,
+        ];
+
+        // Execute the query
+        db.query(sql, values, (err, data) => {
+            if (err) {
+                return res.json("Error");
+            }
+            return res.json(data);
+        });
+    } catch (error) {
+        console.error(error);
+        res.json("Error");
+    }
+});
 
 app.put("/data-warga/:id", (req,res) => {
     const sql = "UPDATE datawarga SET `KK` = ?, `Nama` = ?, `Alamat` = ?, `Status` = ? WHERE ID = ?";

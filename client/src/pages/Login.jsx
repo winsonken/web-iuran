@@ -1,31 +1,73 @@
-import React from 'react'
+import React, { useState } from 'react'
 import loginImage from '../assets/login-img.jpg'
-import { Link, useParams } from 'react-router-dom';
+import loginLogo from '../assets/login-logo.png'
+import { useNavigate } from 'react-router-dom'
+import Dashboard from './Dashboard'
+import axios from 'axios'
+import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
+  const [user, setUser] = useState ('');
+  const [password, setPassword] = useState ('');
+  const navigate = useNavigate();
+  const [loginMessage, setLoginMessage] = useState('');
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    axios.post('http://localhost:8081/login/', { user, password })
+      .then(res => {
+        console.log(res);
+        setLoginMessage(res.data.message);
+        if (res.data.status === 'success') {
+          Swal.fire('Berhasil', res.data.message, 'success').then(() => {
+            navigate('/dashboard');
+          });
+        } else {
+          Swal.fire('Gagal', res.data.message, 'error');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Swal.fire('Gagal', 'Terjadi kesalahan saat login', 'error');
+      });
+  }
+
   return (
-    <div className="w-screen h-screen flex justify-center items-center p-3">
-      <div className="bg-third-orange w-full max-w-3xl sm:h-5/6 rounded-sm flex justify-center items-center gap-5">
-        <div className="sm:w-1/2 h-full hidden sm:block">
-          <img src={loginImage} alt="Login Image" className="w-full h-full rounded-l-sm" />
+    <div className="flex justify-center items-center flex-row w-screen h-screen p-3">
+      <div className="w-full h-full flex justify-center items-center gap-5 md:w-4/5">
+        <div className="hidden md:block md:w-fit h-4/5 relative">
+          <img src={loginImage} alt="Login image" className="w-full h-full rounded-l-lg object-contain"/>
+          <div className="absolute top-3 w-full">
+            <p className="text-center text-main-orange font-bold">Selamat Datang</p>
+          </div>
         </div>
 
-        <div className="flex flex-col justify-center items-center gap-5 w-full h-full px-3 py-5 sm:w-1/2">
-          <form className="flex flex-col items-center gap-5 md:gap-8 w-full max-w-sm">
-            <div className="md:w-2/3 flex flex-col justify-start items-center gap-8">
-              <h1 className="text-second-orange font-semibold text-2xl xs:text-3xl md:text-5xl">Login</h1>
-              <h1 className="text-second-orange font-semibold text-xs xs:text-sm md:text-xl">Selamat datang, silahkan login</h1> 
-            </div>
+        <div className="w-full h-4/5 flex flex-col justify-center items-center max-w-sm md:max-w-md md:w-1/2">
+          <div className="flex items-center gap-1">
+            <img src={loginLogo} alt="Login logo" className="w-12" />
+            <h1 className="text-main-orange font-bold text-base xs:text-xl">Iuranku</h1>
+          </div>
 
-            <div className="w-full sm:w-3/4 flex flex-col gap-5">
-              <input type="text" placeholder='Username' className="w-full bg-transparent border-b border-second-orange px-3 text-main-orange font-semibold placeholder:text-second-orange placeholder:text-sm placeholder:font-medium focus:outline-none caret-main-orange" />
-              <input type="password" placeholder="Password" className="w-full bg-transparent border-b border-second-orange px-3 text-main-orange font-semibold placeholder:text-second-orange placeholder:text-sm placeholder:font-medium focus:outline-none caret-main-orange" />
-            </div>
+          <div className="flex w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center gap-5 w-full p-3">
+              <div className="flex flex-col justify-center items-center gap-3 w-full">
+                <div className="w-full">
+                  <input type="text" placeholder="Email" className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
+                  onChange={e => setUser(e.target.value)}/>
+                </div>
 
-            <div className="w-full flex justify-center">
-              <Link to={`/dashboard`} className="bg-second-orange w-full sm:w-3/4 text-sm text-[#FFFFFF] rounded-lg px-3 py-1 xs:text-base text-center align-middle">Login</Link>
-            </div>
-          </form>
+                <div className="w-full">
+                  <input type="password" placeholder="Kata sandi" className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
+                  onChange={e => setPassword(e.target.value)}/>
+                </div>
+              </div>
+
+              <div className="w-full">
+                <button type="submit" className="bg-main-orange w-full px-3 py-2 rounded-sm text-[#FFFFFF]">Masuk</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

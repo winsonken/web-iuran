@@ -19,12 +19,12 @@ const Navbar = (props) => {
         </div>
 
         { logoutOpen && 
-          <div className="bg-[#FFFFFF] absolute top-12 w-24 p-3 rounded-md shadow-md cursor-pointer xs:top-14 xs:w-28 sm:w-32" onClick={() => { setLogoutOpen(false) }}>
+          <div className="bg-[#FFFFFF] absolute top-14 w-24 p-3 rounded-md shadow-md cursor-pointer xs:top-16 xs:w-28 sm:w-32" onClick={() => { setLogoutOpen(false) }}>
             <div className="flex flex-col items-center xs:items-start gap-1"> 
               <p className="text-sm font-medium xs:hidden">Username</p>
               <div className="flex flex-row items-center gap-1">
                 <FiLogOut className="text-main-orange" />
-                <Link to={`/login`} className="text-sm">Logout</Link>
+                <Link to={`/login`} className="text-sm">Keluar</Link>
               </div>
             </div>
           </div>
