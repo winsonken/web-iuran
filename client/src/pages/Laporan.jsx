@@ -58,7 +58,7 @@ const Laporan = () => {
                         return counter++;
                     } },
                     { title: 'Tahun', data: 'years'},
-                    { title: 'Details', render: function (data, type, row, meta) {
+                    { title: 'Detail', render: function (data, type, row, meta) {
                         const id = row.ID; // replace 'id' with the actual field name from your data
                         const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
                         return `

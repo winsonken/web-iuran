@@ -83,7 +83,7 @@ const Iuran = () => {
                                     return data;
                                 }
                             }},
-                            { title: 'Date', data: 'Date', render: function(data, type, row) {
+                            { title: 'Tanggal', data: 'Date', render: function(data, type, row) {
         
                                 const momentDate = moment(data);
                                 // Assuming 'Month' is your date column
@@ -99,7 +99,7 @@ const Iuran = () => {
                                 return formattedNominal;
                             } },
                             {
-                                title: 'Action',
+                                title: 'Aksi',
                                 render: function (data, type, row, meta) {
                                     if (row.Expired === 'OVERDUE') {
                                         console.log("Row Data:", row); // Log the entire row to inspect its structure
@@ -395,7 +395,7 @@ const Iuran = () => {
 
                         <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md' onClick={handleDeleteAll}>
                             <MdDeleteForever />
-                            <p className="text-xs hidden xs:block">Delete All</p>
+                            <p className="text-xs hidden xs:block">Hapus semua</p>
                         </button>
                     </div>
                 </div>  

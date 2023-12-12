@@ -64,7 +64,7 @@ const Tahun = () => {
                             } },
                             { title: 'Bulan', data: 'bulan'},
                             { title: 'Tahun', data: 'tahun'},
-                            { title: 'Details', render: function (data, type, row, meta) {
+                            { title: 'Detail', render: function (data, type, row, meta) {
                                 const id = row.ID;
                                 bulan = row.bulan; // replace 'id' with the actual field name from your data
                                 tahun = row.tahun; // replace 'tahun' with the actual field name from your data

@@ -52,7 +52,7 @@ const Datawarga = () => {
                     { title: 'Alamat', data: 'Alamat'},
                     { title: 'Status', data: 'Status'},
                     {
-                        title: 'Action',
+                        title: 'Aksi',
                         render: function (data, type, row, meta) {
                             console.log("Row Data:", row); // Log the entire row to inspect its structure
                             const id = row && row.ID; // Check if row is defined before accessing ID
