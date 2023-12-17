@@ -197,10 +197,10 @@ const Pengeluaran = () => {
                     </button>
                 </div>  
 
-                <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
-                    <div className="p-3">
+                <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
+                    <div className="p-3 text-left border border-main-orange rounded-md overflow-hidden">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
+                        <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange rounded-md overflow-hidden" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-xs text-center">
                                     <tr className="h-10">
                                         <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
@@ -232,11 +232,11 @@ const Pengeluaran = () => {
                             <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
                                     <label htmlFor="nominal" className="text-sm font-medium">Nominal</label>
-                                    <input type="number" placeholder="Input nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Masukkan nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="keterangan" className="text-sm font-medium">Keterangan</label>
-                                    <input type="text" placeholder="Input keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" placeholder="Masukkan keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                             </div>
 
@@ -255,11 +255,11 @@ const Pengeluaran = () => {
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="nominal" className="text-sm font-medium">Nominal</label>
-                                    <input type="text" id="nominal" value={nominal} placeholder="Input nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="nominal" value={nominal} placeholder="Masukkan nominal" required onChange={e => setNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="keterangan" className="text-sm font-medium">Keterangan</label>
-                                    <input type="text" id="keterangan" value={keterangan} placeholder="Input keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="keterangan" value={keterangan} placeholder="Masukkan keterangan" required onChange={e => setKeterangan(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                             </div>
 

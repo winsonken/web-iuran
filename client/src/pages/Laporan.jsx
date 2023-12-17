@@ -169,8 +169,8 @@ const Laporan = () => {
                     </button>
                 </div>  
 
-                <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
-                    <div className="p-3">
+                <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
+                    <div className="p-3 text-left border border-main-orange rounded-md overflow-hidden">
                         <div className="overflow-x-auto rounded-t-md">
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                             <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
@@ -198,12 +198,12 @@ const Laporan = () => {
             <ModalForm id="create-modal" modalType={modal} showModal={showModal} setShowModal={setShowModal} title="Tambah data laporan tahunan">
                 <div>
                     <form onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-5">
-                            <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-5">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="tahun" className="text-sm font-medium">Tahun</label>
-                                    <select type="number" placeholder="Input tahun" onChange={e => handleSelectChange(e)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="0" disabled selected>Select Year...</option>
+                                    <select type="number" placeholder="Input tahun" required onChange={e => handleSelectChange(e)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
+                                    <option value="" disabled selected>Pilih Tahun...</option>
                                     <option value="2023">2023</option>
                                     <option value="2024">2024</option>
                                     <option value="2025">2025</option>

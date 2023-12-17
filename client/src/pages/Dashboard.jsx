@@ -15,11 +15,17 @@ const Dashboard = () => {
     const [jumlahPetugas, setJumlahPetugas] = useState(0);
     const [totalNominal, setTotalNominal] = useState(0);
     const [totalNominalpengeluaran, setTotalNominalpengeluaran] = useState(0);
+    const [sisaSaldo, setSisaSaldo] = useState(0); // New state for Sisa Saldo
     const tableRef = useRef(null);
     const tahun = new Date().getFullYear();
     const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const bulanIndex = new Date().getMonth();
     const bulan = namaBulan[bulanIndex];
+
+    useEffect(() => {
+        const sisaSaldoValue = totalNominal - totalNominalpengeluaran;
+        setSisaSaldo(sisaSaldoValue);
+      }, [totalNominal, totalNominalpengeluaran]);
 
     useEffect(() => {
         // Fetch jumlah warga
@@ -45,12 +51,27 @@ const Dashboard = () => {
     const formattedTotalNominal = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
+        minimumFractionDigits: 0, // Set minimumFractionDigits to 0 to remove cents
+        maximumFractionDigits: 0, // Set maximumFractionDigits to 0 to remove cents
     }).format(totalNominal);
-
+    
     const formattedTotalNominalPengeluaran = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
+        minimumFractionDigits: 0, // Set minimumFractionDigits to 0 to remove cents
+        maximumFractionDigits: 0, // Set maximumFractionDigits to 0 to remove cents
     }).format(totalNominalpengeluaran);
+
+    const formattedSisaSaldo = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(sisaSaldo);
+
+      const adjustedFormattedSisaSaldo = sisaSaldo < 0
+    ? `Rp${formattedSisaSaldo.replace('Rp', '')}`
+    : formattedSisaSaldo;
 
 
     useEffect(() => {
@@ -76,11 +97,11 @@ const Dashboard = () => {
     
                     if (status === 'Lunas') {
                         statusCell.css('color', '#4FAC16'); // Set text color to green
-                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
                     } else if (status === 'On Going') {
                         statusCell.css('color', 'red'); // Set text color to red
                         // You might want to remove the custom class if status is not "Active"
-                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Belum Lunas</span>`);
                     }
                 },
             });
@@ -150,16 +171,27 @@ const Dashboard = () => {
                             <p className="text-main-orange font-medium text-xs md:text-sm">Pengeluaran</p>
                         </div>
                     </div>
+
+                    <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit  xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-1/3">
+                        <div className="bg-[#F9E3D0] w-10 h-10 md:w-12 md:h-12 rounded-full flex justify-center items-center">
+                            <GiPayMoney className="text-2xl text-main-orange md:text-3xl" />
+                        </div>
+
+                        <div className="flex flex-col items-center w-[130px]">
+                            <p className="text-main-orange font-bold text-2xl">{adjustedFormattedSisaSaldo}</p>
+                            <p className="text-main-orange font-medium text-xs md:text-sm">Sisa Saldo</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div className="flex flex-col gap-5 ">
                 <h1 className="text-xl text-[#222222] font-medium">Iuran belum lunas - {bulan} {tahun}</h1>
 
-                <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
-                    <div className="p-3">
+                <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
+                    <div className="p-3 text-left border border-main-orange rounded-md overflow-hidden">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
+                        <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange rounded-md overflow-hidden" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
                                         <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>

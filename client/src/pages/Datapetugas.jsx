@@ -91,11 +91,11 @@ const Datapetugas = () => {
     
                     if (status === 'Active') {
                         statusCell.css('color', '#4FAC16'); // Set text color to green
-                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
                     } else if (status === 'Deactive') {
                         statusCell.css('color', 'red'); // Set text color to red
                         // You might want to remove the custom class if status is not "Active"
-                        statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                        statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Tidak Aktif</span>`);
                     }
                 },
             });
@@ -221,10 +221,10 @@ const Datapetugas = () => {
                     </button>
                 </div>  
 
-                <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
-                    <div className="p-3">
+                <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
+                    <div className="p-3 text-left border border-main-orange rounded-md overflow-hidden">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example  ">
+                        <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange rounded-md overflow-hidden" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
                                         <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
@@ -259,25 +259,25 @@ const Datapetugas = () => {
                             <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
                             <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">ID</label>
-                                    <input type="text"  placeholder="Input ID petugas" required onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text"  placeholder="Masukkan ID petugas" required onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Password</label>
-                                    <input type="password"  placeholder="Input Password petugas" required onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Kata sandi</label>
+                                    <input type="password"  placeholder="Masukkan kata sandi petugas" required onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">NIK</label>
-                                    <input type="number" placeholder="Input NIK petugas" required onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Masukkan NIK petugas" required onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
 
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nik" className="text-sm font-medium">Nama</label>
-                                    <input type="text" placeholder="Input Nama" required onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" placeholder="Masukkan Nama" required onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow ">
                                     <label htmlFor="jenis-kelamin" className="text-sm font-medium">Jenis kelamin</label>
                                     <select type="text" required onChange={e => setGender(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="" disabled selected>Select Gender...</option>
+                                    <option value="" disabled selected>Jenis Kelamin...</option>
                                         <option value="Laki-laki">Laki-laki</option>
                                         <option value="Perempuan">Perempuan</option>
                                     </select>
@@ -285,7 +285,7 @@ const Datapetugas = () => {
                                 <div className="flex flex-col gap-2 sm:w-44 grow">
                                     <label htmlFor="status" className="text-sm font-medium">Status</label>
                                     <select type="text" required onChange={e => setStatus(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="" disabled selected>Select Status...</option>
+                                    <option value="" disabled selected>Pilih Status...</option>
                                         <option value="Active">Aktif</option>
                                         <option value="Deactive">Tidak aktif</option>
                                     </select>
@@ -306,26 +306,26 @@ const Datapetugas = () => {
                         <div className="flex flex-col gap-5">
                         <div className="flex flex-col gap-3 justify-center sm:flex-row sm:flex-wrap">
                         <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Username</label>
-                                    <input type="text"  placeholder="Input ID petugas" required value = {iduser} onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">ID Petugas</label>
+                                    <input type="text"  placeholder="Masukkan ID" required value = {iduser} onChange={e => setIduser(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
-                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Password</label>
-                                    <input type="password"  placeholder="Input Password petugas" required value = {pass} onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <label htmlFor="nama-petugas" className="text-sm font-medium">Kata sandi</label>
+                                    <input type="password"  placeholder="Masukkan kata sandi" required value = {pass} onChange={e => setPass(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">NIK</label>
-                                    <input type="number" placeholder="Input NIK petugas" required value = {nik} onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Masukkan NIK" required value = {nik} onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
 
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nik" className="text-sm font-medium">Nama</label>
-                                    <input type="text" placeholder="Input Nama" required value = {nama} onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" placeholder="Masukkan Nama" required value = {nama} onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow ">
                                     <label htmlFor="jenis-kelamin" className="text-sm font-medium">Jenis kelamin</label>
                                     <select type="text" required value = {gender} onChange={e => setGender(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="" disabled selected>Select Gender...</option>
+                                    <option value="" disabled selected>Jenis Kelamin</option>
                                         <option value="Laki-laki">Laki-laki</option>
                                         <option value="Perempuan">Perempuan</option>
                                     </select>
@@ -333,7 +333,7 @@ const Datapetugas = () => {
                                 <div className="flex flex-col gap-2 sm:w-44 grow">
                                     <label htmlFor="status" className="text-sm font-medium">Status</label>
                                     <select type="text" required value = {status} onChange={e => setStatus(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="" disabled selected>Select Status...</option>
+                                    <option value="" disabled selected>Pilih Status</option>
                                         <option value="Active">Aktif</option>
                                         <option value="Deactive">Tidak aktif</option>
                                     </select>

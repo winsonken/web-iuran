@@ -174,15 +174,15 @@ const Iuran = () => {
             
                             if (status === 'Lunas') {
                                 statusCell.css('color', '#4FAC16'); // Set text color to green
-                                statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                                statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
                             } else if (status === 'On Going' && expired === 'NONE') {
                                 statusCell.css('color', 'red'); // Set text color to red
                                 // You might want to remove the custom class if status is not "Active"
-                                statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">${status}</span>`);
+                                statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Belum Lunas</span>`);
                             } else if (expired === 'OVERDUE') {
                                 statusCell.css('color', 'red'); // Set text color to red
                                 // You might want to remove the custom class if status is not "Active"
-                                statusCell.html(`<span class="bg-[#7a7979] text-[#000000] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Over Due</span>`);
+                                statusCell.html(`<span class="bg-[#7a7979] text-[#000000] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Telat Bayar</span>`);
                             }
                         },
                     });
@@ -242,12 +242,12 @@ const Iuran = () => {
     const handleExpired = () => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
-            text: 'Anda tidak akan dapat mengembalikan ini!',
+            text: 'Ini akan mengubah status "Belum Lunas" menjadi "Telat Bayar"',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, hapus!',
+            confirmButtonText: 'Ya, Ubah!',
             cancelButtonText: 'Batal'
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -271,12 +271,12 @@ const Iuran = () => {
     const handleCancelExpired = () => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
-            text: 'Anda tidak akan dapat mengembalikan ini!',
+            text: 'Ini akan mengubah status "Telat Bayar" menjadi "Belum Lunas"',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, hapus!',
+            confirmButtonText: 'Ya, Ubah!',
             cancelButtonText: 'Batal'
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -311,7 +311,7 @@ const Iuran = () => {
                 try{
                 // Perform the delete operation if the user confirms
                 await axios.delete(`http://localhost:8081/deleteall/${Month}/${Year}`);
-                Swal.fire('Berhasil', 'Data telah berhasil diupdate.', 'success').then(() => {
+                Swal.fire('Berhasil', 'Data telah berhasil dihapus.', 'success').then(() => {
                     window.location.reload();
                 });
                 }   catch (err) {
@@ -320,7 +320,7 @@ const Iuran = () => {
                 }  
             }
             else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire('Dibatalkan', 'Data tidak diupdate.', 'info');
+                Swal.fire('Dibatalkan', 'Data tidak dihapus.', 'info');
             }
         });
     };
@@ -385,12 +385,12 @@ const Iuran = () => {
 
                         <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md' onClick={handleExpired}>
                             <RiPassExpiredFill />
-                            <p className="text-xs hidden xs:block">Expired</p>
+                            <p className="text-xs hidden xs:block">Telat Bayar</p>
                         </button>
 
                         <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md' onClick={handleCancelExpired}>
                             <MdCancel />
-                            <p className="text-xs hidden xs:block">Cancel Expired</p>
+                            <p className="text-xs hidden xs:block">Batal Telat</p>
                         </button>
 
                         <button className='bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-2 rounded-md' onClick={handleDeleteAll}>
@@ -400,10 +400,10 @@ const Iuran = () => {
                     </div>
                 </div>  
 
-                <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
-                    <div className="p-3">
+                <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
+                    <div className="p-3 text-left border border-main-orange rounded-md overflow-hidden">
                         <div className="overflow-x-auto rounded-t-md">
-                            <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
+                        <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange rounded-md overflow-hidden" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
                                     <tr className="h-10">
                                         
@@ -464,15 +464,15 @@ const Iuran = () => {
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="nama-warga" className="text-sm font-medium">Nama warga</label>
-                                    <input type="text" id="nama-warga" value={nama} placeholder="Input nama warga" onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="text" id="nama-warga" value={nama} placeholder="Masukkan nama warga" onChange={e => setNama(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="nominal" className="text-sm font-medium">Nominal pembayaran</label>
-                                    <input type="number" id="nominal" value={nominal} placeholder="Input nominal" onChange={e => SetNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" id="nominal" value={nominal} placeholder="Masukkan nominal" onChange={e => SetNominal(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="date" className="text-sm font-medium">Tanggal pembayaran</label>
-                                    <input type="date" id="date" value={date} placeholder="Input nominal" onChange={e => SetDate(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="date" id="date" value={date} placeholder="Masukkan nominal" onChange={e => SetDate(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
                             </div>
 

@@ -174,8 +174,8 @@ const Tahun = () => {
                     </button>
                 </div>  
 
-                <div className="bg-[#FFFFFF] rounded-sm min-w-[150px]">
-                    <div className="p-3">
+                <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
+                    <div className="p-3 text-left border border-main-orange rounded-md overflow-hidden">
                         <div className="overflow-x-auto rounded-t-md">
                             <table ref={tableRef} className="w-full min-w-full table-auto text-left border border-main-orange" id="example">
                                 <thead className="bg-main-orange text-[#FFFFFF] text-center text-xs">
@@ -210,7 +210,7 @@ const Tahun = () => {
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="bulan" className="text-sm font-medium">Bulan</label>
                                     <select type="text" placeholder="Input bulan" required onChange={e => setMonth(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none">
-                                    <option value="" disabled selected>Select Month...</option>
+                                    <option value="" disabled selected>Pilih Bulan...</option>
                                     <option value="Januari">Januari</option>
                                     <option value="Februari">Februari</option>
                                     <option value="Maret">Maret</option>
