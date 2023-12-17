@@ -32,100 +32,197 @@ const Datapetugas = () => {
     const [id, setId] = useState('')
     const [iduser, setIduser] = useState('')
     const [petugas, setPetugas] = useState([]);
+    const [auth, setAuth] = useState(false);
+    axios.defaults.withCredentials = true;
     const tableRef = useRef(null);
 
-    useEffect(() => {
-        let counter = 1;
-        // Initialize DataTables after data is loaded
-        if (tableRef.current) {
-            $(tableRef.current).DataTable({
-                destroy: true, // Destroy any existing DataTable instance
-                data: petugas,
-                scrollX: false, // Disable horizontal scrolling
-                autoWidth: false,
-                columns: [
-                    { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
-                        return counter++;
-                    } },
-                    { title: 'Nama Petugas', data: 'Nama'},
-                    { title: 'No NIK', data: 'NIK' },
-                    { title: 'Jenis Kelamin', data: 'Gender'},
-                    { title: 'Status', data: 'Status'},
-                    {
-                        title: 'Aksi',
-                        render: function (data, type, row, meta) {
-                            console.log("Row Data:", row); // Log the entire row to inspect its structure
-                            const id = row && row.ID; // Check if row is defined before accessing ID
-                            const iduser = row && row.IDuser; // Check if row is defined before accessing ID
-                            const pass = row && row.Password; // Check if row is defined before accessing ID
-                            const nik = row && row.NIK; // Check if row is defined before accessing ID
-                            const nama = row && row.Nama; // Check if row is defined before accessing ID
-                            const gender = row && row.Gender; // Check if row is defined before accessing ID
-                            const status = row && row.Status; // Check if row is defined before accessing ID
-                            console.log("ID:", id); // Log the extracted ID
-                            const actionButtons = (
-                                <div>
-                                  <button
-                                    className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-iduser={iduser} data-nama={nama} data-nik={nik} data-gender={gender} data-status={status} data-pass={pass}
-                                  >
-                                    <FaEdit />
-                                  </button>
-                                  <span style={{ marginRight: '8px' }}></span>
-                                  <button
-                                    className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
-                                  >
-                                    <MdDelete />
-                                  </button>
+    // useEffect(() => {
+    //     let counter = 1;
+    //     // Initialize DataTables after data is loaded
+    //     if (tableRef.current) {
+    //         $(tableRef.current).DataTable({
+    //             destroy: true, // Destroy any existing DataTable instance
+    //             data: petugas,
+    //             scrollX: false, // Disable horizontal scrolling
+    //             autoWidth: false,
+    //             columns: [
+    //                 { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+    //                     return counter++;
+    //                 } },
+    //                 { title: 'Nama Petugas', data: 'Nama'},
+    //                 { title: 'No NIK', data: 'NIK' },
+    //                 { title: 'Jenis Kelamin', data: 'Gender'},
+    //                 { title: 'Status', data: 'Status'},
+    //                 {
+    //                     title: 'Aksi',
+    //                     render: function (data, type, row, meta) {
+    //                         console.log("Row Data:", row); // Log the entire row to inspect its structure
+    //                         const id = row && row.ID; // Check if row is defined before accessing ID
+    //                         const iduser = row && row.IDuser; // Check if row is defined before accessing ID
+    //                         const pass = row && row.Password; // Check if row is defined before accessing ID
+    //                         const nik = row && row.NIK; // Check if row is defined before accessing ID
+    //                         const nama = row && row.Nama; // Check if row is defined before accessing ID
+    //                         const gender = row && row.Gender; // Check if row is defined before accessing ID
+    //                         const status = row && row.Status; // Check if row is defined before accessing ID
+    //                         console.log("ID:", id); // Log the extracted ID
+    //                         const actionButtons = (
+    //                             <div>
+    //                               <button
+    //                                 className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-iduser={iduser} data-nama={nama} data-nik={nik} data-gender={gender} data-status={status} data-pass={pass}
+    //                               >
+    //                                 <FaEdit />
+    //                               </button>
+    //                               <span style={{ marginRight: '8px' }}></span>
+    //                               <button
+    //                                 className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+    //                               >
+    //                                 <MdDelete />
+    //                               </button>
 
-                                </div>
-                              );
+    //                             </div>
+    //                           );
                           
-                              return renderToStaticMarkup(actionButtons);
-                        },
-                    },
-                ],
-                createdRow: function (row, data, dataIndex) {
-                    // Set text color based on the "Status" value
-                    const status = data.Status;
-                    const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
+    //                           return renderToStaticMarkup(actionButtons);
+    //                     },
+    //                 },
+    //             ],
+    //             createdRow: function (row, data, dataIndex) {
+    //                 // Set text color based on the "Status" value
+    //                 const status = data.Status;
+    //                 const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
     
-                    if (status === 'Active') {
-                        statusCell.css('color', '#4FAC16'); // Set text color to green
-                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
-                    } else if (status === 'Deactive') {
-                        statusCell.css('color', 'red'); // Set text color to red
-                        // You might want to remove the custom class if status is not "Active"
-                        statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Tidak Aktif</span>`);
-                    }
-                },
-            });
-            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
-            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
-            searchInput.css({
-                'text-align': 'left',
-                'margin-right': '3px', // Optional: Adjust the margin as needed
-                'width': '200px' // Optional: Adjust the width as needed
-            });
-            $(tableRef.current).on('click', '.delete-button', function() {
-                const id = $(this).data('id');
-                handleDelete(id);
-            });
-            $(tableRef.current).on('click', '.update-button', function() {
-                const e = $(this).data('id');
-                const k = $(this).data('iduser');
-                const j = $(this).data('pass')
-                const f = $(this).data('nama');
-                const g = $(this).data('nik');
-                const h = $(this).data('gender');
-                const i = $(this).data('status');
-                handleEditModal(e, f, g, h, i, j, k);
-            });
-        }
-    }, [petugas]);
+    //                 if (status === 'Active') {
+    //                     statusCell.css('color', '#4FAC16'); // Set text color to green
+    //                     statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
+    //                 } else if (status === 'Deactive') {
+    //                     statusCell.css('color', 'red'); // Set text color to red
+    //                     // You might want to remove the custom class if status is not "Active"
+    //                     statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Tidak Aktif</span>`);
+    //                 }
+    //             },
+    //         });
+    //         const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+    //         searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+    //         searchInput.css({
+    //             'text-align': 'left',
+    //             'margin-right': '3px', // Optional: Adjust the margin as needed
+    //             'width': '200px' // Optional: Adjust the width as needed
+    //         });
+    //         $(tableRef.current).on('click', '.delete-button', function() {
+    //             const id = $(this).data('id');
+    //             handleDelete(id);
+    //         });
+    //         $(tableRef.current).on('click', '.update-button', function() {
+    //             const e = $(this).data('id');
+    //             const k = $(this).data('iduser');
+    //             const j = $(this).data('pass')
+    //             const f = $(this).data('nama');
+    //             const g = $(this).data('nik');
+    //             const h = $(this).data('gender');
+    //             const i = $(this).data('status');
+    //             handleEditModal(e, f, g, h, i, j, k);
+    //         });
+    //     }
+    // }, [petugas]);
 
     useEffect(() => {
         axios.get('http://localhost:8081/data-petugas')
-            .then(res => setPetugas(res.data))
+            .then(res => {
+                if(res.data.status === "Success") {
+                    setAuth(true)
+                    setPetugas(res.data.data)
+                    let counter = 1;
+                    if (tableRef.current) {
+                        $(tableRef.current).DataTable({
+                            destroy: true, // Destroy any existing DataTable instance
+                            data: res.data.data,
+                            scrollX: false, // Disable horizontal scrolling
+                            autoWidth: false,
+                            columns: [
+                                { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                                    return counter++;
+                                } },
+                                { title: 'Nama Petugas', data: 'Nama'},
+                                { title: 'No NIK', data: 'NIK' },
+                                { title: 'Jenis Kelamin', data: 'Gender'},
+                                { title: 'Status', data: 'Status'},
+                                {
+                                    title: 'Aksi',
+                                    render: function (data, type, row, meta) {
+                                        console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                        const id = row && row.ID; // Check if row is defined before accessing ID
+                                        const iduser = row && row.IDuser; // Check if row is defined before accessing ID
+                                        const pass = row && row.Password; // Check if row is defined before accessing ID
+                                        const nik = row && row.NIK; // Check if row is defined before accessing ID
+                                        const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                        const gender = row && row.Gender; // Check if row is defined before accessing ID
+                                        const status = row && row.Status; // Check if row is defined before accessing ID
+                                        console.log("ID:", id); // Log the extracted ID
+                                        const actionButtons = (
+                                            <div>
+                                              <button
+                                                className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-iduser={iduser} data-nama={nama} data-nik={nik} data-gender={gender} data-status={status} data-pass={pass}
+                                              >
+                                                <FaEdit />
+                                              </button>
+                                              <span style={{ marginRight: '8px' }}></span>
+                                              <button
+                                                className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                              >
+                                                <MdDelete />
+                                              </button>
+            
+                                            </div>
+                                          );
+                                      
+                                          return renderToStaticMarkup(actionButtons);
+                                    },
+                                },
+                            ],
+                            createdRow: function (row, data, dataIndex) {
+                                // Set text color based on the "Status" value
+                                const status = data.Status;
+                                const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
+                
+                                if (status === 'Active') {
+                                    statusCell.css('color', '#4FAC16'); // Set text color to green
+                                    statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
+                                } else if (status === 'Deactive') {
+                                    statusCell.css('color', 'red'); // Set text color to red
+                                    // You might want to remove the custom class if status is not "Active"
+                                    statusCell.html(`<span class="bg-[#f59090] text-[#f00c0c] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Tidak Aktif</span>`);
+                                }
+                            },
+                        });
+                        const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                        searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+                        searchInput.css({
+                            'text-align': 'left',
+                            'margin-right': '3px', // Optional: Adjust the margin as needed
+                            'width': '200px' // Optional: Adjust the width as needed
+                        });
+                        $(tableRef.current).on('click', '.delete-button', function() {
+                            const id = $(this).data('id');
+                            handleDelete(id);
+                        });
+                        $(tableRef.current).on('click', '.update-button', function() {
+                            const e = $(this).data('id');
+                            const k = $(this).data('iduser');
+                            const j = $(this).data('pass')
+                            const f = $(this).data('nama');
+                            const g = $(this).data('nik');
+                            const h = $(this).data('gender');
+                            const i = $(this).data('status');
+                            handleEditModal(e, f, g, h, i, j, k);
+                        });
+                    }
+                } else {
+                    setAuth(false)
+                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
+                        navigate('/login')
+                    });
+                }
+            })
             .catch(err => console.log(err));
     }, []);
 
@@ -211,6 +308,8 @@ const Datapetugas = () => {
 
     return (
         <Layout>
+            {auth ?
+            <div>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
                     <h1 className="text-xl font-bold text-main-orange">Data petugas</h1>
@@ -267,7 +366,7 @@ const Datapetugas = () => {
                                 </div>
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
                                     <label htmlFor="nama-petugas" className="text-sm font-medium">NIK</label>
-                                    <input type="number" placeholder="Masukkan NIK petugas" required onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
+                                    <input type="number" placeholder="Masukkan NIK petugas" onInput={(e) => e.target.value = e.target.value.slice(0, 16)} required onChange={e => setNIK(e.target.value)} className="w-full py-1 px-3 border border-[#CCCCCC] rounded-md placeholder:text-sm focus:outline-none"/>
                                 </div>
 
                                 <div className="flex flex-col gap-2 sm:w-44 grow  ">
@@ -363,6 +462,10 @@ const Datapetugas = () => {
                     </form>
                 </div>
             </ModalForm>
+            </div>
+            :
+            <div></div>
+}
 
         </Layout>
   )

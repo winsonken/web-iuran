@@ -11,16 +11,18 @@ const Login = () => {
   const [user, setUser] = useState ('');
   const [password, setPassword] = useState ('');
   const navigate = useNavigate();
-  const [loginMessage, setLoginMessage] = useState('');
+  const [message, setMessage] = useState('');
+  
+  axios.defaults.withCredentials = true;
 
   function handleSubmit(event) {
     event.preventDefault();
     axios.post('http://localhost:8081/login/', { user, password })
       .then(res => {
         console.log(res);
-        setLoginMessage(res.data.message);
+        setMessage(res.data.message);
         if (res.data.status === 'success') {
-          Swal.fire('Berhasil', res.data.message, 'success').then(() => {
+          Swal.fire('Berhasil', 'Akun berhasil Login', 'success').then(() => {
             navigate('/dashboard');
           });
         } else {
@@ -29,7 +31,7 @@ const Login = () => {
       })
       .catch(err => {
         console.log(err);
-        Swal.fire('Gagal', 'Terjadi kesalahan saat login', 'error');
+        Swal.fire('Gagal', 'Terjadi Kesalahan pada Login' , 'error');
       });
   }
 
@@ -53,12 +55,12 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center gap-5 w-full p-3">
               <div className="flex flex-col justify-center items-center gap-3 w-full">
                 <div className="w-full">
-                  <input type="text" placeholder="Email" className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
+                  <input type="text" placeholder="User ID" required className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
                   onChange={e => setUser(e.target.value)}/>
                 </div>
 
                 <div className="w-full">
-                  <input type="password" placeholder="Kata sandi" className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
+                  <input type="password" placeholder="Kata sandi" required className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
                   onChange={e => setPassword(e.target.value)}/>
                 </div>
               </div>

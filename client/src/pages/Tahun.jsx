@@ -17,11 +17,12 @@ const Tahun = () => {
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");
     const [bulan, setBulan] = useState(0);
-    const [month, setMonth] = useState([]);
+    const [month, setMonth] = useState({});
     const [months, setMonths] = useState('')
     const [year, setYear] = useState('')
     const { id } = useParams();
-    const { Month, Year } = useParams();
+    const [auth, setAuth] = useState(false);
+    axios.defaults.withCredentials = true;
     const tableRef = useRef(null);
 
     function handleSubmit(event) {
@@ -38,19 +39,17 @@ const Tahun = () => {
     }
 
     useEffect(() => {
-        let counter = 1;
         axios.get(`http://localhost:8081/tahun/${id}`)
-            .then(res => {
-                console.log(res.data); // Log the received data
-                setMonth(res.data);
-
+        .then(res => {
+            if(res.data.status === "Success") {
+                setAuth(true)
+                setYear(res.data.data);
+                let counter = 1;
                 if (tableRef.current) {
-                    
                     let bulan, tahun;
-                    
                     $(tableRef.current).DataTable({
                         destroy: true, // Destroy any existing DataTable instance
-                        data: res.data,
+                        data: res.data.data,
                         searching: false, // Hide search bar
                         lengthChange: false, // Hide show entries dropdown
                         pageLength: 12, // Set the number of rows per page
@@ -109,9 +108,87 @@ const Tahun = () => {
                         handleDelete(id);
                     });
                 }
-            })
-            .catch(err => console.error(err));
-    }, [id]);
+            }else {
+                setAuth(false)
+                Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
+                    navigate('/login')
+                });
+            }
+        })
+    }, [id])
+
+    // useEffect(() => {
+    //     let counter = 1;
+    //     axios.get(`http://localhost:8081/tahun/${id}`)
+    //         .then(res => {
+    //             console.log(res.data); // Log the received data
+    //             setMonth(res.data);
+    //             if (tableRef.current) {
+    //                 let bulan, tahun;
+    //                 $(tableRef.current).DataTable({
+    //                     destroy: true, // Destroy any existing DataTable instance
+    //                     data: res.data,
+    //                     searching: false, // Hide search bar
+    //                     lengthChange: false, // Hide show entries dropdown
+    //                     pageLength: 12, // Set the number of rows per page
+    //                     paging: false, // Disable pagination
+    //                     info: false, 
+    //                     scrollX: false, // Disable horizontal scrolling
+    //                     autoWidth: false,
+    //                     columns: [
+    //                         { title: 'No', render: function (data, type, row, meta) {
+    //                             return counter++;
+    //                         } },
+    //                         { title: 'Bulan', data: 'bulan'},
+    //                         { title: 'Tahun', data: 'tahun'},
+    //                         { title: 'Details', render: function (data, type, row, meta) {
+    //                             const id = row.ID;
+    //                             bulan = row.bulan; // replace 'id' with the actual field name from your data
+    //                             tahun = row.tahun; // replace 'tahun' with the actual field name from your data
+    //                             return `
+    //                                 <a href="/iuran/${bulan}/${tahun}">Open</a>
+    //                             `;
+    //                         },},
+    //                         {
+    //                             title: 'Aksi',
+    //                             render: function (data, type, row, meta) {
+    //                                 const id = row.ID;
+                            
+    //                                 const handleDeleteClick = () => {
+    //                                     const id = $(this).data('id');
+    //                                     handleDelete(id);
+    //                                 };
+                            
+    //                                 const deleteButton = (
+    //                                     <button
+    //                                         className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+    //                                         onClick={handleDeleteClick}
+    //                                     >
+    //                                         <MdDelete />
+    //                                     </button>
+    //                                 );
+                            
+    //                                 return renderToStaticMarkup(deleteButton);
+    //                             },
+    //                         },
+    //                     ],
+    //                     createdRow: function (row, data, dataIndex) {
+    //                         // Set text color based on the "Status" value
+    //                         const statusCell = $('td:eq(3)', row); // Change 4 to the correct index of the "Status" column
+    //                             statusCell.css('color', '#4FAC16'); // Set text color to green
+    //                             statusCell.html(`<a href="/iuran/${bulan}/${tahun}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
+    //                         },
+    //                 });
+    //                 const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+    //                 searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+    //                 $(tableRef.current).on('click', '.delete-button', function() {
+    //                     const id = $(this).data('id');
+    //                     handleDelete(id);
+    //                 });
+    //             }
+    //         })
+    //         .catch(err => console.error(err));
+    // }, [id]);
 
     const handleDelete = async (id) => {
         // Use SweetAlert to show a confirmation dialog

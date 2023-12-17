@@ -21,6 +21,8 @@ const Laporan = () => {
     const tableRef = useRef(null);
     const [id, setId] = useState('')
     const [years, setYear] = useState('')
+    const [auth, setAuth] = useState(false);
+    axios.defaults.withCredentials = true;
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -39,71 +41,71 @@ const Laporan = () => {
         setId(e.target.value);
     }
 
-    useEffect(() => {
-        let counter = 1;
-        // Initialize DataTables after data is loaded
-        if (tableRef.current) {
-            $(tableRef.current).DataTable({
-                destroy: true, // Destroy any existing DataTable instance
-                data: year,
-                searching: false, // Hide search bar
-                lengthChange: false, // Hide show entries dropdown
-                pageLength: 12, // Set the number of rows per page
-                paging: false, // Disable pagination
-                info: false, 
-                scrollX: false, // Disable horizontal scrolling
-                autoWidth: false,
-                columns: [
-                    { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
-                        return counter++;
-                    } },
-                    { title: 'Tahun', data: 'years'},
-                    { title: 'Detail', render: function (data, type, row, meta) {
-                        const id = row.ID; // replace 'id' with the actual field name from your data
-                        const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
-                        return `
-                            <a href="/tahun/${id}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
-                        `;
-                    },},
-                    {
-                        title: 'Aksi',
-                        render: function (data, type, row, meta) {
-                            const id = row.ID;
-                            const tahun = row.years;
+    // useEffect(() => {
+    //     let counter = 1;
+    //     // Initialize DataTables after data is loaded
+    //     if (tableRef.current) {
+    //         $(tableRef.current).DataTable({
+    //             destroy: true, // Destroy any existing DataTable instance
+    //             data: year,
+    //             searching: false, // Hide search bar
+    //             lengthChange: false, // Hide show entries dropdown
+    //             pageLength: 12, // Set the number of rows per page
+    //             paging: false, // Disable pagination
+    //             info: false, 
+    //             scrollX: false, // Disable horizontal scrolling
+    //             autoWidth: false,
+    //             columns: [
+    //                 { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+    //                     return counter++;
+    //                 } },
+    //                 { title: 'Tahun', data: 'years'},
+    //                 { title: 'Detail', render: function (data, type, row, meta) {
+    //                     const id = row.ID; // replace 'id' with the actual field name from your data
+    //                     const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
+    //                     return `
+    //                         <a href="/tahun/${id}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
+    //                     `;
+    //                 },},
+    //                 {
+    //                     title: 'Aksi',
+    //                     render: function (data, type, row, meta) {
+    //                         const id = row.ID;
+    //                         const tahun = row.years;
                     
-                            const handleDeleteClick = () => {
-                                const id = $(this).data('id');
-                                handleDelete(id);
-                            };
+    //                         const handleDeleteClick = () => {
+    //                             const id = $(this).data('id');
+    //                             handleDelete(id);
+    //                         };
                     
-                            const deleteButton = (
-                                <button
-                                    className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
-                                    onClick={handleDeleteClick}
-                                >
-                                    <MdDelete />
-                                </button>
-                            );
+    //                         const deleteButton = (
+    //                             <button
+    //                                 className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+    //                                 onClick={handleDeleteClick}
+    //                             >
+    //                                 <MdDelete />
+    //                             </button>
+    //                         );
                     
-                            return renderToStaticMarkup(deleteButton);
-                        },
-                    },
-                ],
-                createdRow: function (row, data, dataIndex) {
-                    // Set text color based on the "Status" value
-                    const statusCell = $('td:eq(2)', row); // Change 4 to the correct index of the "Status" column
-                        statusCell.css('color', '#4FAC16'); // Set text color to green
-                        statusCell.html(`<a href="/tahun/${data.ID}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
-                    },
-            });
-            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
-            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
-            $(tableRef.current).on('click', '.delete-button', function() {
-                const id = $(this).data('id');
-                handleDelete(id);
-            });
-        }
-    }, [year]);
+    //                         return renderToStaticMarkup(deleteButton);
+    //                     },
+    //                 },
+    //             ],
+    //             createdRow: function (row, data, dataIndex) {
+    //                 // Set text color based on the "Status" value
+    //                 const statusCell = $('td:eq(2)', row); // Change 4 to the correct index of the "Status" column
+    //                     statusCell.css('color', '#4FAC16'); // Set text color to green
+    //                     statusCell.html(`<a href="/tahun/${data.ID}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
+    //                 },
+    //         });
+    //         const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+    //         searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+    //         $(tableRef.current).on('click', '.delete-button', function() {
+    //             const id = $(this).data('id');
+    //             handleDelete(id);
+    //         });
+    //     }
+    // }, [year]);
 
     const handleDelete = async (id) => {
         // Use SweetAlert to show a confirmation dialog
@@ -137,7 +139,79 @@ const Laporan = () => {
 
     useEffect(() => {
         axios.get('http://localhost:8081/laporan')
-            .then(res => setYears(res.data))
+            .then(res => {
+                if(res.data.status === "Success") {
+                    setAuth(true)
+                    setYears(res.data.data)
+                    let counter = 1;
+                    if (tableRef.current) {
+                        $(tableRef.current).DataTable({
+                            destroy: true, // Destroy any existing DataTable instance
+                            data: res.data.data,
+                            searching: false, // Hide search bar
+                            lengthChange: false, // Hide show entries dropdown
+                            pageLength: 12, // Set the number of rows per page
+                            paging: false, // Disable pagination
+                            info: false, 
+                            scrollX: false, // Disable horizontal scrolling
+                            autoWidth: false,
+                            columns: [
+                                { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                                    return counter++;
+                                } },
+                                { title: 'Tahun', data: 'years'},
+                                { title: 'Detail', render: function (data, type, row, meta) {
+                                    const id = row.ID; // replace 'id' with the actual field name from your data
+                                    const tahun = row.tahun; // replace 'tahun' with the actual field name from your data
+                                    return `
+                                        <a href="/tahun/${id}" class='btn btn-outline-success btn-block btn-flat'>Open</a>
+                                    `;
+                                },},
+                                {
+                                    title: 'Aksi',
+                                    render: function (data, type, row, meta) {
+                                        const id = row.ID;
+                                        const tahun = row.years;
+                                
+                                        const handleDeleteClick = () => {
+                                            const id = $(this).data('id');
+                                            handleDelete(id);
+                                        };
+                                
+                                        const deleteButton = (
+                                            <button
+                                                className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                                onClick={handleDeleteClick}
+                                            >
+                                                <MdDelete />
+                                            </button>
+                                        );
+                                
+                                        return renderToStaticMarkup(deleteButton);
+                                    },
+                                },
+                            ],
+                            createdRow: function (row, data, dataIndex) {
+                                // Set text color based on the "Status" value
+                                const statusCell = $('td:eq(2)', row); // Change 4 to the correct index of the "Status" column
+                                    statusCell.css('color', '#4FAC16'); // Set text color to green
+                                    statusCell.html(`<a href="/tahun/${data.ID}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
+                                },
+                        });
+                        const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                        searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+                        $(tableRef.current).on('click', '.delete-button', function() {
+                            const id = $(this).data('id');
+                            handleDelete(id);
+                        });
+                    }
+                } else {
+                    setAuth(false)
+                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
+                        navigate('/login')
+                    });
+                }
+            })
             .catch(err => console.log(err));
     }, []);
 
@@ -160,6 +234,8 @@ const Laporan = () => {
 
     return (
         <Layout>
+            {auth ?
+            <div>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
                     <h1 className="text-xl font-bold text-main-orange">Laporan</h1>
@@ -254,6 +330,10 @@ const Laporan = () => {
                     </form>
                 </div>
             </ModalForm>
+            </div>
+            :
+            <div></div>
+}
 
         </Layout>
   )
