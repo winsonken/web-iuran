@@ -4,10 +4,20 @@ const mysql = require("mysql");
 const moment = require('moment');
 const bcryptjs = require('bcryptjs');
 const bcrypt = require('bcrypt');
+<<<<<<< HEAD
+=======
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin : ['http://localhost:5173'],
+    methods : ["POST", "GET", "PUT", "DELETE"],
+    credentials : true
+}));
+app.use(cookieParser());
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -16,6 +26,46 @@ const db = mysql.createConnection({
     database: "crud"
 })
 
+<<<<<<< HEAD
+=======
+const verifyUser = (req, res, next) => {
+    const token = req.cookies.token;
+    if(!token) {
+        return res.json({Error: "You are not Auth"});
+    } else {
+        jwt.verify(token, "jwtsecretkey", (err, decoded) => {
+            if (err) {
+                return res.json({Error: "Token is not correct"});
+            } else {
+                req.name = decoded.name;
+                next();
+            }
+        })
+    }
+}
+
+app.get('/dashboard', verifyUser, (req, res) => {
+    const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success", name: req.name,data });
+    })
+})
+
+app.get("/data-warga", verifyUser, (req,res) => {
+    const sql = "SELECT * FROM datawarga";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success",data });
+    })
+})
+
+app.get('/logout', (req, res) => {
+    res.clearCookie('token');
+    return res.json({status: "Success"});
+})
+
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 app.post('/login', (req, res) => {
     const sql = "SELECT * FROM datapetugas WHERE IDuser = ?";
     db.query(sql, [req.body.user], async (err, data) => {
@@ -30,6 +80,12 @@ app.post('/login', (req, res) => {
                 const passwordMatch = await bcrypt.compare(req.body.password, storedPassword);
             
                 if (passwordMatch) {
+<<<<<<< HEAD
+=======
+                    const name = data[0].Nama;
+                    const token = jwt.sign({name}, "jwtsecretkey", {expiresIn : '1d'});
+                    res.cookie('token', token);
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
                     return res.json({ status: 'success', message: 'Login Berhasil' });
                 } else {
                     return res.status(401).json({ status: 'error', message: 'Password Salah' });
@@ -108,30 +164,31 @@ app.get("/", (req,res) => {
     })
 })
 
-app.get("/data-warga", (req,res) => {
-    const sql = "SELECT * FROM datawarga";
-    db.query(sql, (err,data) => {
-        if(err) return res.json("Err");
-        return res.json(data);
-    })
-})
+// app.get("/data-warga", (req,res) => {
+//     const sql = "SELECT * FROM datawarga";
+//     db.query(sql, (err,data) => {
+//         if(err) return res.json("Err");
+//         return res.json(data);
+//     })
+// })
 
-app.get("/pengeluaran", (req,res) => {
+app.get("/pengeluaran",verifyUser, (req,res) => {
     const sql = "SELECT * FROM datapengeluaran";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
-        return res.json(data);
+        return res.json({status : "Success", data });
     })
 })
 
-app.get("/data-petugas", (req,res) => {
+app.get("/data-petugas", verifyUser, (req,res) => {
     const sql = "SELECT * FROM datapetugas";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
-        return res.json(data);
+        return res.json({status : "Success",data });
     })
 })
 
+<<<<<<< HEAD
 app.get("/dashboard", (req,res) => {
     const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
     db.query(sql, (err,data) => {
@@ -139,6 +196,15 @@ app.get("/dashboard", (req,res) => {
         return res.json(data);
     })
 })
+=======
+// app.get("/dashboard", (req,res) => {
+//     const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
+//     db.query(sql, (err,data) => {
+//         if(err) return res.json("Err");
+//         return res.json(data);
+//     })
+// })
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
 app.post("/data-warga", (req,res) => {
     const sql = "INSERT INTO datawarga (`KK`, `Nama`, `Alamat`, `Status`) VALUES (?)";
@@ -291,7 +357,7 @@ app.delete("/deletepetugas/:id", (req,res) => {
     });
 })
 
-app.get("/iuran/:bulan/:tahun/:id", (req, res) => {
+app.get("/iuran/:bulan/:tahun/:id", verifyUser, (req, res) => {
     const sql = "SELECT * FROM datawarga WHERE ID = ?";
     const id = req.params.id;
 
@@ -300,19 +366,19 @@ app.get("/iuran/:bulan/:tahun/:id", (req, res) => {
             console.error(err);
             return res.status(500).json({ error: "Internal Server Error" });
         }
-        return res.json(data);
+        return res.json({status : "Success", data });
     });
 });
 
-app.get("/laporan", (req,res) => {
+app.get("/laporan", verifyUser, (req,res) => {
     const sql = "SELECT * FROM year";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
-        return res.json(data);
+        return res.json({status : "Success",data });
     })
 })
 
-app.get("/tahun/:id", (req, res) => {
+app.get('/tahun/:id', verifyUser, (req, res) => {
     const id = req.params.id;
 
     const sql = `
@@ -324,16 +390,13 @@ app.get("/tahun/:id", (req, res) => {
     `;
 
     db.query(sql, [id], (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Internal Server Error" });
-        }
+        if(err) return res.json("Err");
         console.log("Data retrieved from the database:", data);
-        return res.json(data);
+        return res.json({status : "Success", data });
     });
 });
 
-app.get("/iuran/:bulan/:tahun", (req, res) => {
+app.get("/iuran/:bulan/:tahun", verifyUser, (req, res) => {
     const Month = req.params.bulan;
     const Year = req.params.tahun;
 
@@ -345,7 +408,7 @@ app.get("/iuran/:bulan/:tahun", (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
         console.log("SQL Query:", sql);
-        return res.json(data);
+        return res.json({status : "Success", data });
     });
 });
 

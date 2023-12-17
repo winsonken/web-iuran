@@ -26,10 +26,13 @@ const Pengeluaran = () => {
     const [id, setId] = useState('')
     const [pengeluaran, setPengeluaran] = useState([]);
     const [keterangan, setKeterangan] = useState("");
+    const [auth, setAuth] = useState(false);
+    axios.defaults.withCredentials = true;
     const tableRef = useRef(null);
 
     const navigate = useNavigate();
 
+<<<<<<< HEAD
     useEffect(() => {
         let counter = 1;
         // Initialize DataTables after data is loaded
@@ -70,34 +73,76 @@ const Pengeluaran = () => {
                                   >
                                     <MdDelete />
                                   </button>
+=======
+    // useEffect(() => {
+    //     let counter = 1;
+    //     // Initialize DataTables after data is loaded
+    //     if (tableRef.current) {
+    //         $(tableRef.current).DataTable({
+    //             destroy: true, // Destroy any existing DataTable instance
+    //             data: pengeluaran,
+    //             scrollX: false, // Disable horizontal scrolling
+    //             autoWidth: false,
+    //             columns: [
+    //                 { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+    //                     return counter++;
+    //                 } },
+    //                 { title: 'Nominal', data: 'Nominal', render: function(data, type, row) {
+    //                     // Format the Nominal column as currency
+    //                     const formattedNominal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data);
+    //                     return formattedNominal;
+    //                 } },
+    //                 { title: 'Keterangan', data: 'Keterangan'},
+    //                 {
+    //                     title: 'Aksi',
+    //                     render: function (data, type, row, meta) {
+    //                         console.log("Row Data:", row); // Log the entire row to inspect its structure
+    //                         const id = row && row.ID; // Check if row is defined before accessing ID
+    //                         const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+    //                         const keterangan = row && row.Keterangan; // Check if row is defined before accessing ID
+    //                         console.log("ID:", id); // Log the extracted ID
+    //                         const actionButtons = (
+    //                             <div>
+    //                               <button
+    //                                 className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nominal = {nominal} data-keterangan = {keterangan}
+    //                               >
+    //                                 <FaEdit />
+    //                               </button>
+    //                               <span style={{ marginRight: '8px' }}></span>
+    //                               <button
+    //                                 className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+    //                               >
+    //                                 <MdDelete />
+    //                               </button>
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
-                                </div>
-                              );
+    //                             </div>
+    //                           );
                           
-                              return renderToStaticMarkup(actionButtons);
-                        },
-                    },
-                ],
-            });
-            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
-            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
-            searchInput.css({
-                'text-align': 'left',
-                'margin-right': '3px', // Optional: Adjust the margin as needed
-                'width': '200px' // Optional: Adjust the width as needed
-            });
-            $(tableRef.current).on('click', '.delete-button', function() {
-                const id = $(this).data('id');
-                handleDelete(id);
-            });
-            $(tableRef.current).on('click', '.update-button', function() {
-                const e = $(this).data('id');
-                const f = $(this).data('nominal');
-                const g = $(this).data('keterangan');
-                handleEditModal(e, f, g);
-            });
-        }
-    }, [pengeluaran]);
+    //                           return renderToStaticMarkup(actionButtons);
+    //                     },
+    //                 },
+    //             ],
+    //         });
+    //         const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+    //         searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+    //         searchInput.css({
+    //             'text-align': 'left',
+    //             'margin-right': '3px', // Optional: Adjust the margin as needed
+    //             'width': '200px' // Optional: Adjust the width as needed
+    //         });
+    //         $(tableRef.current).on('click', '.delete-button', function() {
+    //             const id = $(this).data('id');
+    //             handleDelete(id);
+    //         });
+    //         $(tableRef.current).on('click', '.update-button', function() {
+    //             const e = $(this).data('id');
+    //             const f = $(this).data('nominal');
+    //             const g = $(this).data('keterangan');
+    //             handleEditModal(e, f, g);
+    //         });
+    //     }
+    // }, [pengeluaran]);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -114,7 +159,82 @@ const Pengeluaran = () => {
 
     useEffect(() => {
         axios.get('http://localhost:8081/pengeluaran')
-            .then(res => setPengeluaran(res.data))
+            .then(res => {
+                if(res.data.status === "Success") {
+                    setAuth(true)
+                    setPengeluaran(res.data.data)
+                    let counter = 1;
+                    if (tableRef.current) {
+                        $(tableRef.current).DataTable({
+                            destroy: true, // Destroy any existing DataTable instance
+                            data: res.data.data,
+                            scrollX: false, // Disable horizontal scrolling
+                            autoWidth: false,
+                            columns: [
+                                { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                                    return counter++;
+                                } },
+                                { title: 'Nominal', data: 'Nominal', render: function(data, type, row) {
+                                    // Format the Nominal column as currency
+                                    const formattedNominal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data);
+                                    return formattedNominal;
+                                } },
+                                { title: 'Keterangan', data: 'Keterangan'},
+                                {
+                                    title: 'Aksi',
+                                    render: function (data, type, row, meta) {
+                                        console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                        const id = row && row.ID; // Check if row is defined before accessing ID
+                                        const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+                                        const keterangan = row && row.Keterangan; // Check if row is defined before accessing ID
+                                        console.log("ID:", id); // Log the extracted ID
+                                        const actionButtons = (
+                                            <div>
+                                              <button
+                                                className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nominal = {nominal} data-keterangan = {keterangan}
+                                              >
+                                                <FaEdit />
+                                              </button>
+                                              <span style={{ marginRight: '8px' }}></span>
+                                              <button
+                                                className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                              >
+                                                <MdDelete />
+                                              </button>
+            
+                                            </div>
+                                          );
+                                      
+                                          return renderToStaticMarkup(actionButtons);
+                                    },
+                                },
+                            ],
+                        });
+                        const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                        searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+                        searchInput.css({
+                            'text-align': 'left',
+                            'margin-right': '3px', // Optional: Adjust the margin as needed
+                            'width': '200px' // Optional: Adjust the width as needed
+                        });
+                        $(tableRef.current).on('click', '.delete-button', function() {
+                            const id = $(this).data('id');
+                            handleDelete(id);
+                        });
+                        $(tableRef.current).on('click', '.update-button', function() {
+                            const e = $(this).data('id');
+                            const f = $(this).data('nominal');
+                            const g = $(this).data('keterangan');
+                            handleEditModal(e, f, g);
+                        });
+                    }
+                }else {
+                    setAuth(false)
+                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
+                        navigate('/login')
+                    });
+                }
+            })
             .catch(err => console.log(err));
     }, []);
 
@@ -187,6 +307,8 @@ const Pengeluaran = () => {
 
     return (
         <Layout>
+            { auth ?
+            <div>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
                     <h1 className="text-xl font-bold text-main-orange">Pengeluaran</h1>
@@ -286,7 +408,10 @@ const Pengeluaran = () => {
                     </form>
                 </div>
             </ModalForm>
-
+            </div>
+            :
+            <div></div>
+            }
         </Layout>
   )
 }

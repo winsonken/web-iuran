@@ -37,7 +37,9 @@ const Iuran = () => {
     const [nominal, SetNominal] = useState('')
     const [id, setId] = useState('')
     const [laporan, setLaporan] = useState({}); 
+    const [auth, setAuth] = useState(false);
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
 
 
     function handleSubmit(event) {
@@ -54,13 +56,14 @@ const Iuran = () => {
     }
 
     
-    useEffect(() => {
-        let counter = 1;
-        axios.get(`http://localhost:8081/iuran/${Month}/${Year}`)
-            .then(res => {
-                console.log(res.data); // Log the received data
-                setStudent(res.data);
+    // useEffect(() => {
+    //     let counter = 1;
+    //     axios.get(`http://localhost:8081/iuran/${Month}/${Year}`)
+    //         .then(res => {
+    //             console.log(res.data); // Log the received data
+    //             setStudent(res.data);
 
+<<<<<<< HEAD
                 if (tableRef.current) {
                     $(tableRef.current).DataTable({
                         destroy: true, // Destroy any existing DataTable instance
@@ -141,37 +144,120 @@ const Iuran = () => {
                                               >
                                                 <MdDelete />
                                               </button>
+=======
+    //             if (tableRef.current) {
+    //                 $(tableRef.current).DataTable({
+    //                     destroy: true, // Destroy any existing DataTable instance
+    //                     responsive: true,
+    //                     scrollX: false, // Disable horizontal scrolling
+    //                     autoWidth: false,
+    //                     width: '100%',
+    //                     data: res.data,
+    //                     columns: [
+    //                         { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+    //                             return counter++;
+    //                         } },
+    //                         { title: 'No KK', data: 'KK' },
+    //                         { title: 'Nama', data: 'Nama' },
+    //                         { title: 'Status', data: 'Status', 
+    //                             render: function(data, type, row) {
+    //                             if (row.Expired === 'OVERDUE') {
+    //                                 return 'Overdue';
+    //                             } else {
+    //                                 return data;
+    //                             }
+    //                         }},
+    //                         { title: 'Date', data: 'Date', render: function(data, type, row) {
+        
+    //                             const momentDate = moment(data);
+    //                             // Assuming 'Month' is your date column
+    //                             if (momentDate.isValid()) {
+    //                                 return momentDate.format('DD-MM-YYYY'); // Adjust the format as needed
+    //                             } else {
+    //                                 return 'Belum ada'; // Return empty string for invalid dates
+    //                             }
+    //                         } },
+    //                         { title: 'Nominal', data: 'Nominal', render: function(data, type, row) {
+    //                             // Format the Nominal column as currency
+    //                             const formattedNominal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data);
+    //                             return formattedNominal;
+    //                         } },
+    //                         {
+    //                             title: 'Aksi',
+    //                             render: function (data, type, row, meta) {
+    //                                 if (row.Expired === 'OVERDUE') {
+    //                                     console.log("Row Data:", row); // Log the entire row to inspect its structure
+    //                                     const id = row && row.ID; // Check if row is defined before accessing ID
+    //                                     const nama = row && row.Nama; // Check if row is defined before accessing ID
+    //                                     const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+    //                                     const date = row && row.Date; // Check if row is defined before accessing ID
+    //                                     console.log("ID:", id); // Log the extracted ID
+    //                                     const handleDeleteClick = () => {
+    //                                         const id = $(this).data('id');
+    //                                         handleDelete(id);
+    //                                     };
+    //                                     const deleteButton = (
+    //                                         <button
+    //                                             className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+    //                                             onClick={handleDeleteClick}
+    //                                         >
+    //                                             <MdDelete />
+    //                                         </button>
+    //                                     );
+    //                                     return renderToStaticMarkup(deleteButton);
+    //                                 } else {
+    //                                     console.log("Row Data:", row); // Log the entire row to inspect its structure
+    //                                     const id = row && row.ID; // Check if row is defined before accessing ID
+    //                                     const nama = row && row.Nama; // Check if row is defined before accessing ID
+    //                                     const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+    //                                     const date = row && row.Date; // Check if row is defined before accessing ID
+    //                                     console.log("ID:", id); // Log the extracted ID
+    //                                     const actionButtons = (
+    //                                         <div>
+    //                                           <button
+    //                                             className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nama={nama} data-date={moment(date).format('YYYY-MM-DD')} data-nominal = {nominal}
+    //                                           >
+    //                                             <FaEdit />
+    //                                           </button>
+    //                                           <span style={{ marginRight: '8px' }}></span>
+    //                                           <button
+    //                                             className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+    //                                           >
+    //                                             <MdDelete />
+    //                                           </button>
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
-                                            </div>
-                                          );
+    //                                         </div>
+    //                                       );
                                       
-                                          return renderToStaticMarkup(actionButtons);
-                                    }
-                                    console.log("Row Data:", row); // Log the entire row to inspect its structure
-                                    const id = row && row.ID; // Check if row is defined before accessing ID
-                                    const nama = row && row.Nama; // Check if row is defined before accessing ID
-                                    const nominal = row && row.Nominal; // Check if row is defined before accessing ID
-                                    const date = row && row.Date; // Check if row is defined before accessing ID
-                                    console.log("ID:", id); // Log the extracted ID
-                                    return `
-                                        <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-success update-button'>Update</button>
+    //                                       return renderToStaticMarkup(actionButtons);
+    //                                 }
+    //                                 console.log("Row Data:", row); // Log the entire row to inspect its structure
+    //                                 const id = row && row.ID; // Check if row is defined before accessing ID
+    //                                 const nama = row && row.Nama; // Check if row is defined before accessing ID
+    //                                 const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+    //                                 const date = row && row.Date; // Check if row is defined before accessing ID
+    //                                 console.log("ID:", id); // Log the extracted ID
+    //                                 return `
+    //                                     <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-success update-button'>Update</button>
                                         
-                                    `;
-                                },
-                            },
-                        ],
-                        createdRow: function (row, data, dataIndex) {
-                            // Add rounded corners to each cell in the row
-                            $(row).find('td').css('border-radius', '10px');
+    //                                 `;
+    //                             },
+    //                         },
+    //                     ],
+    //                     createdRow: function (row, data, dataIndex) {
+    //                         // Add rounded corners to each cell in the row
+    //                         $(row).find('td').css('border-radius', '10px');
     
-                            // ... your existing createdRow function ...
-                        },
-                        createdRow: function (row, data, dataIndex) {
-                            // Set text color based on the "Status" value
-                            const status = data.Status;
-                            const expired = data.Expired;
-                            const statusCell = $('td:eq(3)', row); // Change 4 to the correct index of the "Status" column
+    //                         // ... your existing createdRow function ...
+    //                     },
+    //                     createdRow: function (row, data, dataIndex) {
+    //                         // Set text color based on the "Status" value
+    //                         const status = data.Status;
+    //                         const expired = data.Expired;
+    //                         const statusCell = $('td:eq(3)', row); // Change 4 to the correct index of the "Status" column
             
+<<<<<<< HEAD
                             if (status === 'Lunas') {
                                 statusCell.css('color', '#4FAC16'); // Set text color to green
                                 statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
@@ -208,6 +294,44 @@ const Iuran = () => {
             })
             .catch(err => console.error(err));
     }, [Month, Year]);
+=======
+    //                         if (status === 'Lunas') {
+    //                             statusCell.css('color', '#4FAC16'); // Set text color to green
+    //                             statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
+    //                         } else if (status === 'On Going' && expired === 'NONE') {
+    //                             statusCell.css('color', 'red'); // Set text color to red
+    //                             // You might want to remove the custom class if status is not "Active"
+    //                             statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Belum Lunas</span>`);
+    //                         } else if (expired === 'OVERDUE') {
+    //                             statusCell.css('color', 'red'); // Set text color to red
+    //                             // You might want to remove the custom class if status is not "Active"
+    //                             statusCell.html(`<span class="bg-[#7a7979] text-[#000000] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Telat Bayar</span>`);
+    //                         }
+    //                     },
+    //                 });
+    //                 const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+    //                 searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+    //                 searchInput.css({
+    //                     'text-align': 'left',
+    //                     'margin-right': '3px', // Optional: Adjust the margin as needed
+    //                     'width': '200px' // Optional: Adjust the width as needed
+    //                 });
+    //                 $(tableRef.current).on('click', '.delete-button', function() {
+    //                     const id = $(this).data('id');
+    //                     handleDelete(id);
+    //                 });
+    //                 $(tableRef.current).on('click', '.update-button', function() {
+    //                     const e = $(this).data('id');
+    //                     const f = $(this).data('nama');
+    //                     const g = $(this).data('nominal');
+    //                     const h = $(this).data('date');
+    //                     handleEditModal(e, f, g, h);
+    //                 });
+    //             }
+    //         })
+    //         .catch(err => console.error(err));
+    // }, [Month, Year]);
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
     const handleDelete = async (id) => {
         // Use SweetAlert to show a confirmation dialog
@@ -339,10 +463,162 @@ const Iuran = () => {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:8081/iuran/${Month}/${Year}/${id}`)
+        axios.get(`http://localhost:8081/iuran/${Month}/${Year}`)
             .then(res => {
-                console.log(res.data); // Log the received data
-                setLaporan(res.data);
+                if(res.data.status === "Success") {
+                    setAuth(true)
+                    setLaporan(res.data.data)
+                    let counter = 1;
+                    if (tableRef.current) {
+                        $(tableRef.current).DataTable({
+                            destroy: true, // Destroy any existing DataTable instance
+                            responsive: true,
+                            scrollX: false, // Disable horizontal scrolling
+                            autoWidth: false,
+                            width: '100%',
+                            data: res.data.data,
+                            columns: [
+                                { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                                    return counter++;
+                                } },
+                                { title: 'No KK', data: 'KK' },
+                                { title: 'Nama', data: 'Nama' },
+                                { title: 'Status', data: 'Status', 
+                                    render: function(data, type, row) {
+                                    if (row.Expired === 'OVERDUE') {
+                                        return 'Overdue';
+                                    } else {
+                                        return data;
+                                    }
+                                }},
+                                { title: 'Date', data: 'Date', render: function(data, type, row) {
+            
+                                    const momentDate = moment(data);
+                                    // Assuming 'Month' is your date column
+                                    if (momentDate.isValid()) {
+                                        return momentDate.format('DD-MM-YYYY'); // Adjust the format as needed
+                                    } else {
+                                        return 'Belum ada'; // Return empty string for invalid dates
+                                    }
+                                } },
+                                { title: 'Nominal', data: 'Nominal', render: function(data, type, row) {
+                                    // Format the Nominal column as currency
+                                    const formattedNominal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data);
+                                    return formattedNominal;
+                                } },
+                                {
+                                    title: 'Aksi',
+                                    render: function (data, type, row, meta) {
+                                        if (row.Expired === 'OVERDUE') {
+                                            console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                            const id = row && row.ID; // Check if row is defined before accessing ID
+                                            const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                            const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+                                            const date = row && row.Date; // Check if row is defined before accessing ID
+                                            console.log("ID:", id); // Log the extracted ID
+                                            const handleDeleteClick = () => {
+                                                const id = $(this).data('id');
+                                                handleDelete(id);
+                                            };
+                                            const deleteButton = (
+                                                <button
+                                                    className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                                    onClick={handleDeleteClick}
+                                                >
+                                                    <MdDelete />
+                                                </button>
+                                            );
+                                            return renderToStaticMarkup(deleteButton);
+                                        } else {
+                                            console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                            const id = row && row.ID; // Check if row is defined before accessing ID
+                                            const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                            const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+                                            const date = row && row.Date; // Check if row is defined before accessing ID
+                                            console.log("ID:", id); // Log the extracted ID
+                                            const actionButtons = (
+                                                <div>
+                                                  <button
+                                                    className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nama={nama} data-date={moment(date).format('YYYY-MM-DD')} data-nominal = {nominal}
+                                                  >
+                                                    <FaEdit />
+                                                  </button>
+                                                  <span style={{ marginRight: '8px' }}></span>
+                                                  <button
+                                                    className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                                  >
+                                                    <MdDelete />
+                                                  </button>
+    
+                                                </div>
+                                              );
+                                          
+                                              return renderToStaticMarkup(actionButtons);
+                                        }
+                                        console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                        const id = row && row.ID; // Check if row is defined before accessing ID
+                                        const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                        const nominal = row && row.Nominal; // Check if row is defined before accessing ID
+                                        const date = row && row.Date; // Check if row is defined before accessing ID
+                                        console.log("ID:", id); // Log the extracted ID
+                                        return `
+                                            <button data-id=${id} data-nama=${nama} data-nominal=${nominal} data-date=${date} class='btn btn-success update-button'>Update</button>
+                                            
+                                        `;
+                                    },
+                                },
+                            ],
+                            createdRow: function (row, data, dataIndex) {
+                                // Add rounded corners to each cell in the row
+                                $(row).find('td').css('border-radius', '10px');
+        
+                                // ... your existing createdRow function ...
+                            },
+                            createdRow: function (row, data, dataIndex) {
+                                // Set text color based on the "Status" value
+                                const status = data.Status;
+                                const expired = data.Expired;
+                                const statusCell = $('td:eq(3)', row); // Change 4 to the correct index of the "Status" column
+                
+                                if (status === 'Lunas') {
+                                    statusCell.css('color', '#4FAC16'); // Set text color to green
+                                    statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
+                                } else if (status === 'On Going' && expired === 'NONE') {
+                                    statusCell.css('color', 'red'); // Set text color to red
+                                    // You might want to remove the custom class if status is not "Active"
+                                    statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Belum Lunas</span>`);
+                                } else if (expired === 'OVERDUE') {
+                                    statusCell.css('color', 'red'); // Set text color to red
+                                    // You might want to remove the custom class if status is not "Active"
+                                    statusCell.html(`<span class="bg-[#7a7979] text-[#000000] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Telat Bayar</span>`);
+                                }
+                            },
+                        });
+                        const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                        searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+                        searchInput.css({
+                            'text-align': 'left',
+                            'margin-right': '3px', // Optional: Adjust the margin as needed
+                            'width': '200px' // Optional: Adjust the width as needed
+                        });
+                        $(tableRef.current).on('click', '.delete-button', function() {
+                            const id = $(this).data('id');
+                            handleDelete(id);
+                        });
+                        $(tableRef.current).on('click', '.update-button', function() {
+                            const e = $(this).data('id');
+                            const f = $(this).data('nama');
+                            const g = $(this).data('nominal');
+                            const h = $(this).data('date');
+                            handleEditModal(e, f, g, h);
+                        });
+                    }
+                }else {
+                    setAuth(false)
+                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
+                        navigate('/login')
+                    });
+                }
             })
             .catch(err => console.log(err));
     }, [id]);
@@ -373,6 +649,8 @@ const Iuran = () => {
 
     return (
         <Layout>
+           {auth ? 
+            <div>
             <div className="flex flex-col gap-5">
                 <div className="flex flex-row justify-between items-center">
                     <h1 className="text-xl font-bold text-main-orange">Laporan Iuran Tahun {Year} Bulan {Month}</h1>
@@ -499,8 +777,13 @@ const Iuran = () => {
                     </form>
                 </div>
             </ModalForm>
-
+            </div>
+                    :
+                    <div></div>
+                       }
         </Layout>
+
+
   )
 }
 

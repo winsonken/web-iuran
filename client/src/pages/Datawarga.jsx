@@ -32,8 +32,12 @@ const Datawarga = () => {
     const [warga, setWarga] = useState([]);
     const [nama, setNama] = useState('')
     const [id, setId] = useState('')
+    const [auth, setAuth] = useState(false)
+    axios.defaults.withCredentials = true;
+    const [message, setMessage] = useState('');
     const tableRef = useRef(null);
 
+<<<<<<< HEAD
     useEffect(() => {
         let counter = 1;
         // Initialize DataTables after data is loaded
@@ -74,19 +78,62 @@ const Datawarga = () => {
                                   >
                                     <MdDelete />
                                   </button>
+=======
+    // useEffect(() => {
+    //     let counter = 1;
+    //     // Initialize DataTables after data is loaded
+    //     if (tableRef.current) {
+    //         $(tableRef.current).DataTable({
+    //             destroy: true, // Destroy any existing DataTable instance
+    //             data: res.data.data,
+    //             scrollX: false, // Disable horizontal scrolling
+    //             autoWidth: false,
+    //             columns: [
+    //                 { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+    //                     return counter++;
+    //                 } },
+    //                 { title: 'No KK', data: 'KK' },
+    //                 { title: 'Nama Perwakilan', data: 'Nama'},
+    //                 { title: 'Alamat', data: 'Alamat'},
+    //                 { title: 'Status', data: 'Status'},
+    //                 {
+    //                     title: 'Aksi',
+    //                     render: function (data, type, row, meta) {
+    //                         console.log("Row Data:", row); // Log the entire row to inspect its structure
+    //                         const id = row && row.ID; // Check if row is defined before accessing ID
+    //                         const kk = row && row.KK; // Check if row is defined before accessing ID
+    //                         const nama = row && row.Nama; // Check if row is defined before accessing ID
+    //                         const alamat = row && row.Alamat; // Check if row is defined before accessing ID
+    //                         const status = row && row.Status; // Check if row is defined before accessing ID
+    //                         console.log("ID:", id); // Log the extracted ID
+    //                         const actionButtons = (
+    //                             <div>
+    //                               <button
+    //                                 className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nama={nama} data-kk={kk} data-alamat={alamat} data-status={status}
+    //                               >
+    //                                 <FaEdit />
+    //                               </button>
+    //                               <span style={{ marginRight: '8px' }}></span>
+    //                               <button
+    //                                 className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+    //                               >
+    //                                 <MdDelete />
+    //                               </button>
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
-                                </div>
-                              );
+    //                             </div>
+    //                           );
                           
-                              return renderToStaticMarkup(actionButtons);
-                        },
-                    },
-                ],
-                createdRow: function (row, data, dataIndex) {
-                    // Set text color based on the "Status" value
-                    const status = data.Status;
-                    const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
+    //                           return renderToStaticMarkup(actionButtons);
+    //                     },
+    //                 },
+    //             ],
+    //             createdRow: function (row, data, dataIndex) {
+    //                 // Set text color based on the "Status" value
+    //                 const status = data.Status;
+    //                 const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
     
+<<<<<<< HEAD
                     if (status === 'Active') {
                         statusCell.css('color', '#4FAC16'); // Set text color to green
                         statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
@@ -97,28 +144,40 @@ const Datawarga = () => {
                     }
                 },
             });
+=======
+    //                 if (status === 'Active') {
+    //                     statusCell.css('color', '#4FAC16'); // Set text color to green
+    //                     statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
+    //                 } else if (status === 'Deactive') {
+    //                     statusCell.css('color', 'red'); // Set text color to red
+    //                     // You might want to remove the custom class if status is not "Active"
+    //                     statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Tidak Aktif</span>`);
+    //                 }
+    //             },
+    //         });
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
             
-            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
-            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
-            searchInput.css({
-                'text-align': 'left',
-                'margin-right': '3px', // Optional: Adjust the margin as needed
-                'width': '200px' // Optional: Adjust the width as needed
-            });
-            $(tableRef.current).on('click', '.delete-button', function() {
-                const id = $(this).data('id');
-                handleDelete(id);
-            });
-            $(tableRef.current).on('click', '.update-button', function() {
-                const e = $(this).data('id');
-                const f = $(this).data('nama');
-                const g = $(this).data('kk');
-                const h = $(this).data('alamat');
-                const i = $(this).data('status');
-                handleEditModal(e, f, g, h, i);
-            });
-        }
-    }, [warga]);
+    //         const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+    //         searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+    //         searchInput.css({
+    //             'text-align': 'left',
+    //             'margin-right': '3px', // Optional: Adjust the margin as needed
+    //             'width': '200px' // Optional: Adjust the width as needed
+    //         });
+    //         $(tableRef.current).on('click', '.delete-button', function() {
+    //             const id = $(this).data('id');
+    //             handleDelete(id);
+    //         });
+    //         $(tableRef.current).on('click', '.update-button', function() {
+    //             const e = $(this).data('id');
+    //             const f = $(this).data('nama');
+    //             const g = $(this).data('kk');
+    //             const h = $(this).data('alamat');
+    //             const i = $(this).data('status');
+    //             handleEditModal(e, f, g, h, i);
+    //         });
+    //     }
+    // }, [warga]);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -165,8 +224,99 @@ const Datawarga = () => {
 
     useEffect(() => {
         axios.get('http://localhost:8081/data-warga')
-            .then(res => setWarga(res.data))
-            .catch(err => console.log(err));
+            .then(res => {
+                if(res.data.status === "Success") {
+                    setAuth(true)
+                    setWarga(res.data.data)
+                    let counter = 1;
+                    if (tableRef.current) {
+                        $(tableRef.current).DataTable({
+                            destroy: true, // Destroy any existing DataTable instance
+                            data: res.data.data,
+                            scrollX: false, // Disable horizontal scrolling
+                            autoWidth: false,
+                            columns: [
+                                { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
+                                    return counter++;
+                                } },
+                                { title: 'No KK', data: 'KK' },
+                                { title: 'Nama Perwakilan', data: 'Nama'},
+                                { title: 'Alamat', data: 'Alamat'},
+                                { title: 'Status', data: 'Status'},
+                                {
+                                    title: 'Aksi',
+                                    render: function (data, type, row, meta) {
+                                        console.log("Row Data:", row); // Log the entire row to inspect its structure
+                                        const id = row && row.ID; // Check if row is defined before accessing ID
+                                        const kk = row && row.KK; // Check if row is defined before accessing ID
+                                        const nama = row && row.Nama; // Check if row is defined before accessing ID
+                                        const alamat = row && row.Alamat; // Check if row is defined before accessing ID
+                                        const status = row && row.Status; // Check if row is defined before accessing ID
+                                        console.log("ID:", id); // Log the extracted ID
+                                        const actionButtons = (
+                                            <div>
+                                              <button
+                                                className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nama={nama} data-kk={kk} data-alamat={alamat} data-status={status}
+                                              >
+                                                <FaEdit />
+                                              </button>
+                                              <span style={{ marginRight: '8px' }}></span>
+                                              <button
+                                                className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
+                                              >
+                                                <MdDelete />
+                                              </button>
+            
+                                            </div>
+                                          );
+                                      
+                                          return renderToStaticMarkup(actionButtons);
+                                    },
+                                },
+                            ],
+                            createdRow: function (row, data, dataIndex) {
+                                // Set text color based on the "Status" value
+                                const status = data.Status;
+                                const statusCell = $('td:eq(4)', row); // Change 4 to the correct index of the "Status" column
+                
+                                if (status === 'Active') {
+                                    statusCell.css('color', '#4FAC16'); // Set text color to green
+                                    statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Aktif</span>`);
+                                } else if (status === 'Deactive') {
+                                    statusCell.css('color', 'red'); // Set text color to red
+                                    // You might want to remove the custom class if status is not "Active"
+                                    statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Tidak Aktif</span>`);
+                                }
+                            },
+                        });
+                        
+                        const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                        searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
+                        searchInput.css({
+                            'text-align': 'left',
+                            'margin-right': '3px', // Optional: Adjust the margin as needed
+                            'width': '200px' // Optional: Adjust the width as needed
+                        });
+                        $(tableRef.current).on('click', '.delete-button', function() {
+                            const id = $(this).data('id');
+                            handleDelete(id);
+                        });
+                        $(tableRef.current).on('click', '.update-button', function() {
+                            const e = $(this).data('id');
+                            const f = $(this).data('nama');
+                            const g = $(this).data('kk');
+                            const h = $(this).data('alamat');
+                            const i = $(this).data('status');
+                            handleEditModal(e, f, g, h, i);
+                        });
+                    }
+                } else {
+                    setAuth(false)
+                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
+                        navigate('/login')
+                    });
+                }
+            })
     }, []);
 
     const navigate = useNavigate();
@@ -218,6 +368,9 @@ const Datawarga = () => {
 
     return (
         <Layout>
+            {auth 
+            ?
+            <div>
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
                     <h1 className="text-xl font-bold text-main-orange">Data warga</h1>
@@ -344,8 +497,12 @@ const Datawarga = () => {
                     </form>
                 </div>
             </ModalForm>
-
+            </div>
+            :
+            <div></div>
+}
         </Layout>
+
   )
 }
 

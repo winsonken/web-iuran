@@ -3,6 +3,7 @@ import loginImage from '../assets/login-img.jpg'
 import loginLogo from '../assets/login-logo.png'
 import { useNavigate } from 'react-router-dom'
 import Dashboard from './Dashboard'
+<<<<<<< HEAD
 
 const Login = () => {
   const [login, setLogin] = useState(false);
@@ -10,6 +11,39 @@ const Login = () => {
   if (login === true) {
     navigate('/dashboard')
   };
+=======
+import axios from 'axios'
+import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const Login = () => {
+  const [user, setUser] = useState ('');
+  const [password, setPassword] = useState ('');
+  const navigate = useNavigate();
+  const [message, setMessage] = useState('');
+  
+  axios.defaults.withCredentials = true;
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    axios.post('http://localhost:8081/login/', { user, password })
+      .then(res => {
+        console.log(res);
+        setMessage(res.data.message);
+        if (res.data.status === 'success') {
+          Swal.fire('Berhasil', 'Akun berhasil Login', 'success').then(() => {
+            navigate('/dashboard');
+          });
+        } else {
+          Swal.fire('Gagal', res.data.message, 'error');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Swal.fire('Gagal', 'Terjadi Kesalahan pada Login' , 'error');
+      });
+  }
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
   return (
     <div className="flex justify-center items-center flex-row w-screen h-screen p-3">
@@ -28,6 +62,7 @@ const Login = () => {
           </div>
 
           <div className="flex w-full">
+<<<<<<< HEAD
             <form className="flex flex-col justify-center items-center gap-5 w-full p-3">
               <div className="flex flex-col justify-center items-center gap-3 w-full">
                 <div className="w-full">
@@ -36,11 +71,27 @@ const Login = () => {
 
                 <div className="w-full">
                   <input type="password" placeholder="Kata sandi" className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" />
+=======
+            <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center gap-5 w-full p-3">
+              <div className="flex flex-col justify-center items-center gap-3 w-full">
+                <div className="w-full">
+                  <input type="text" placeholder="User ID" required className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
+                  onChange={e => setUser(e.target.value)}/>
+                </div>
+
+                <div className="w-full">
+                  <input type="password" placeholder="Kata sandi" required className="w-full px-3 py-2 bg-transparent text-main-orange placeholder:text-main-orange font-medium border-b border-main-orange focus:outline-none" 
+                  onChange={e => setPassword(e.target.value)}/>
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
                 </div>
               </div>
 
               <div className="w-full">
+<<<<<<< HEAD
                 <button type="submit" className="bg-main-orange w-full px-3 py-2 rounded-sm text-[#FFFFFF]" onClick={() => { setLogin(true) }}>Masuk</button>
+=======
+                <button type="submit" className="bg-main-orange w-full px-3 py-2 rounded-sm text-[#FFFFFF]">Masuk</button>
+>>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
               </div>
             </form>
           </div>
