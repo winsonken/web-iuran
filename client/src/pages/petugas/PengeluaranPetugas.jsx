@@ -3,8 +3,8 @@ import axios from 'axios';
 import $ from 'jquery';
 import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
 import 'datatables.net'; // Import DataTables
-import Layout from '../Layout/Layout'
-import ModalForm from '../components/ModalForm';
+import PetugasLayout from '../../Layout/PetugasLayout';
+import ModalForm from '../../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
@@ -18,7 +18,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 
-const Pengeluaran = () => {
+const PengeluaranPetugas = () => {
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");
@@ -263,7 +263,7 @@ const Pengeluaran = () => {
     }
 
     return (
-        <Layout>
+        <PetugasLayout>
             { auth ?
             <div>
             <div className="flex flex-col gap-5">
@@ -369,8 +369,8 @@ const Pengeluaran = () => {
             :
             <div></div>
             }
-        </Layout>
+        </PetugasLayout>
   )
 }
 
-export default Pengeluaran
+export default PengeluaranPetugas

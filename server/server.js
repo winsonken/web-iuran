@@ -4,11 +4,8 @@ const mysql = require("mysql");
 const moment = require('moment');
 const bcryptjs = require('bcryptjs');
 const bcrypt = require('bcrypt');
-<<<<<<< HEAD
-=======
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
->>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
 const app = express();
 app.use(express.json());
@@ -26,8 +23,6 @@ const db = mysql.createConnection({
     database: "crud"
 })
 
-<<<<<<< HEAD
-=======
 const verifyUser = (req, res, next) => {
     const token = req.cookies.token;
     if(!token) {
@@ -65,7 +60,6 @@ app.get('/logout', (req, res) => {
     return res.json({status: "Success"});
 })
 
->>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 app.post('/login', (req, res) => {
     const sql = "SELECT * FROM datapetugas WHERE IDuser = ?";
     db.query(sql, [req.body.user], async (err, data) => {
@@ -80,12 +74,9 @@ app.post('/login', (req, res) => {
                 const passwordMatch = await bcrypt.compare(req.body.password, storedPassword);
             
                 if (passwordMatch) {
-<<<<<<< HEAD
-=======
                     const name = data[0].Nama;
                     const token = jwt.sign({name}, "jwtsecretkey", {expiresIn : '1d'});
                     res.cookie('token', token);
->>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
                     return res.json({ status: 'success', message: 'Login Berhasil' });
                 } else {
                     return res.status(401).json({ status: 'error', message: 'Password Salah' });
@@ -188,15 +179,6 @@ app.get("/data-petugas", verifyUser, (req,res) => {
     })
 })
 
-<<<<<<< HEAD
-app.get("/dashboard", (req,res) => {
-    const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
-    db.query(sql, (err,data) => {
-        if(err) return res.json("Err");
-        return res.json(data);
-    })
-})
-=======
 // app.get("/dashboard", (req,res) => {
 //     const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
 //     db.query(sql, (err,data) => {
@@ -204,7 +186,6 @@ app.get("/dashboard", (req,res) => {
 //         return res.json(data);
 //     })
 // })
->>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
 app.post("/data-warga", (req,res) => {
     const sql = "INSERT INTO datawarga (`KK`, `Nama`, `Alamat`, `Status`) VALUES (?)";

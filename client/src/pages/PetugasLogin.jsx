@@ -7,7 +7,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Login = () => {
+const PetugasLogin = () => {
   const [user, setUser] = useState ('');
   const [password, setPassword] = useState ('');
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const Login = () => {
               <h1 className="text-main-orange font-bold text-base xs:text-xl">Iuranku</h1>
             </div>
             
-            <h1 className="text-main-orange font-bold text-xl">Login admin</h1>
+            <h1 className="text-main-orange font-bold text-xl">Login petugas</h1>
           </div>
 
           <div className="flex w-full">
@@ -102,4 +102,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default PetugasLogin

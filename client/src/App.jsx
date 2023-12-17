@@ -9,6 +9,18 @@ import Tahun from './pages/Tahun'
 import Datapetugas from './pages/Datapetugas'
 import Datawarga from './pages/Datawarga'
 import Iuran from './pages/Iuran'
+import DashboardUser from './pages/user/DashboardUser'
+import LaporanUser from './pages/user/LaporanUser'
+import DashboardPetugas from './pages/petugas/DashboardPetugas'
+import LaporanPetugas from './pages/petugas/LaporanPetugas'
+import PengeluaranPetugas from './pages/petugas/PengeluaranPetugas'
+import DatawargaPetugas from './pages/petugas/DatawargaPetugas'
+import TahunPetugas from './pages/petugas/TahunPetugas'
+import IuranPetugas from './pages/petugas/IuranPetugas'
+import TahunUser from './pages/user/TahunUser'
+import IuranUser from './pages/user/IuranUser'
+import UserLogin from './pages/UserLogin'
+import PetugasLogin from './pages/PetugasLogin'
 
 function App() {
   return (
@@ -16,11 +28,14 @@ function App() {
       <BrowserRouter>
         <Routes>
       
-          <Route path="/" element={<Login />}>
-            <Route path="/login" element={<Login />} />
-          </Route>
+          <Route path="/" element={<UserLogin />} />
+          <Route path="/user-login" element={<UserLogin />} />
+          <Route path="/admin-login" element={<Login />} />
+          <Route path="/petugas-login" element={<PetugasLogin />} />
           
-          <Route path="/dashboard" element={<Dashboard />} />
+          
+          
+          <Route path="/dashboard-admin" element={<Dashboard />} />
           <Route path="/laporan" element={<Laporan />} />
           <Route path="/tahun/:id" element={<Tahun />} />
           <Route path="/iuran/:Month/:Year" element={<Iuran />} />
@@ -28,6 +43,22 @@ function App() {
           <Route path="/pengeluaran" element={<Pengeluaran />} />
           <Route path="/data-petugas" element={<Datapetugas />} />
           <Route path="/data-warga" element={<Datawarga />} />
+
+          <Route path="/dashboard-petugas" element={<DashboardPetugas />} />
+          <Route path="/laporan-petugas" element={<LaporanPetugas />} />
+          <Route path="/tahun-petugas/:id" element={<TahunPetugas />} />
+          <Route path="/iuran-petugas/:Month/:Year" element={<IuranPetugas />} />
+          <Route path="/iuran-petugas/:Month/:Year/:id" element={<IuranPetugas />} />
+          <Route path="/pengeluaran-petugas" element={<PengeluaranPetugas />} />
+          <Route path="/data-warga-petugas" element={<DatawargaPetugas />} />
+
+
+          <Route path="/dashboard-user" element={<DashboardUser />} />
+          <Route path="/laporan-user" element={<LaporanUser />} />
+          <Route path="/tahun-user/:id" element={<TahunUser />} />
+          <Route path="/iuran-user/:Month/:Year" element={<IuranUser />} />
+          <Route path="/iuran-user/:Month/:Year/:id" element={<IuranUser />} />
+
         </Routes>
       </BrowserRouter>
     </>

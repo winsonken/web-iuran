@@ -9,32 +9,27 @@ import { Link, NavLink, useLocation, useParams } from 'react-router-dom';
 const sideMenu = [
     {
         "name": "Dashboard",
-        "link": "/dashboard-admin",
+        "link": "/dashboard-petugas",
         "icon": <AiOutlineDashboard />
     },
     {
         "name": "Laporan",
-        "link": "/laporan",
+        "link": "/laporan-petugas",
         "icon": <IoDocumentText />
     },
     {
         "name": "Pengeluaran",
-        "link": "/pengeluaran",
+        "link": "/pengeluaran-petugas",
         "icon": <GiPayMoney />
     },
     {
-        "name": "Data petugas",
-        "link": "/data-petugas",
-        "icon": <IoPeople />
-    },
-    {
         "name": "Data warga",
-        "link": "/data-warga",
+        "link": "/data-warga-petugas",
         "icon": <IoPeople />
     }
 ];
 
-const Sidebar = (props) => { 
+const PetugasSidebar = (props) => { 
     const location = useLocation();
     const path = location.pathname;
     
@@ -62,4 +57,4 @@ const Sidebar = (props) => {
   )
 }
 
-export default Sidebar
+export default PetugasSidebar

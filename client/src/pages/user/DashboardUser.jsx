@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import Layout from '../Layout/Layout'
+import UserLayout from '../../Layout/UserLayout';
 import { IoPeople } from "react-icons/io5";
 import { FaMoneyCheck } from "react-icons/fa6";
 import { GiPayMoney } from "react-icons/gi";
@@ -11,7 +11,7 @@ import moment from 'moment';
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
 
-const Dashboard = () => {
+const DashboardUser = () => {
     const [warga, setWarga] = useState([]);
     const [jumlahWarga, setJumlahWarga] = useState(0);
     const [jumlahPetugas, setJumlahPetugas] = useState(0);
@@ -185,12 +185,12 @@ const Dashboard = () => {
     
 
   return (
-    <Layout>
+    <UserLayout>
         {
         auth ?
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">
-                <h1 className="text-xl font-bold text-main-orange">Admin Dashboard</h1>
+                <h1 className="text-xl font-bold text-main-orange">Dashboard Warga</h1>
 
                 <div className="flex gap-3 justify-center lg:justify-between flex-wrap w-full h-100">
                     <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-1/3">
@@ -287,8 +287,8 @@ const Dashboard = () => {
             <h3>login Now</h3>
         </div>
 }
-    </Layout>
+    </UserLayout>
   )
 }
 
-export default Dashboard
+export default DashboardUser

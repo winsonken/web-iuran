@@ -12,11 +12,8 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
-<<<<<<< HEAD
-=======
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
->>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-session": "^1.17.3",

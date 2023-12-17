@@ -6,12 +6,9 @@ import { RxChevronDown } from "react-icons/rx";
 import { GiPayMoney } from "react-icons/gi";
 import { FiLogOut } from "react-icons/fi";
 import { Link, useParams } from 'react-router-dom';
-<<<<<<< HEAD
-=======
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom'
->>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
 
 const Navbar = (props) => {
   const navigate = useNavigate();
@@ -45,11 +42,7 @@ const Navbar = (props) => {
               <p className="text-sm font-medium xs:hidden">{name}</p>
               <div className="flex flex-row items-center gap-1">
                 <FiLogOut className="text-main-orange" />
-<<<<<<< HEAD
-                <Link to={`/login`} className="text-sm">Keluar</Link>
-=======
                 <div className="text-sm" onClick={handleDelete}>Keluar</div>
->>>>>>> a72d380ecad9962285f3fddc588af3358adf177d
               </div>
             </div>
           </div>

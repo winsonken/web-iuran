@@ -3,8 +3,8 @@ import axios from 'axios';
 import $ from 'jquery';
 import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
 import 'datatables.net'; // Import DataTables
-import Layout from '../Layout/Layout'
-import ModalForm from '../components/ModalForm';
+import PetugasLayout from '../../Layout/PetugasLayout';
+import ModalForm from '../../components/ModalForm';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
@@ -19,7 +19,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { RiPassExpiredFill } from "react-icons/ri";
 import { MdCancel } from "react-icons/md";
 
-const Iuran = () => {
+const IuranPetugas = () => {
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     // Set Modal Type
@@ -526,7 +526,7 @@ const Iuran = () => {
     }
 
     return (
-        <Layout>
+        <PetugasLayout>
            {auth ? 
             <div>
             <div className="flex flex-col gap-5">
@@ -659,10 +659,10 @@ const Iuran = () => {
                     :
                     <div></div>
                        }
-        </Layout>
+        </PetugasLayout>
 
 
   )
 }
 
-export default Iuran
+export default IuranPetugas

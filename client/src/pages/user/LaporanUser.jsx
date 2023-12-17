@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef  } from 'react'
-import Layout from '../Layout/Layout'
-import ModalForm from '../components/ModalForm';
+import UserLayout from '../../Layout/UserLayout';
+import ModalForm from '../../components/ModalForm';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Swal from 'sweetalert2';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-const Laporan = () => {
+const LaporanUser = () => {
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");
     const [tahun, setTahun] = useState(0);
@@ -195,7 +195,7 @@ const Laporan = () => {
                                 // Set text color based on the "Status" value
                                 const statusCell = $('td:eq(2)', row); // Change 4 to the correct index of the "Status" column
                                     statusCell.css('color', '#4FAC16'); // Set text color to green
-                                    statusCell.html(`<a href="/tahun/${data.ID}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
+                                    statusCell.html(`<a href="/tahun-user/${data.ID}"><span class="bg-[#F9E3D0] text-[#FF9130] px-4 py-1 rounded-full" style="width: 120px; display: inline-block;">Lihat Detail</span></a>`);
                                 },
                         });
                         const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
@@ -233,7 +233,7 @@ const Laporan = () => {
     }
 
     return (
-        <Layout>
+        <UserLayout>
             {auth ?
             <div>
             <div className="flex flex-col gap-5">
@@ -335,8 +335,8 @@ const Laporan = () => {
             <div></div>
 }
 
-        </Layout>
+        </UserLayout>
   )
 }
 
-export default Laporan
+export default LaporanUser
