@@ -256,8 +256,8 @@ const Datawarga = () => {
                     }
                 } else {
                     setAuth(false)
-                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
-                        navigate('/login')
+                    Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
+                        navigate(-1)
                     });
                 }
             })

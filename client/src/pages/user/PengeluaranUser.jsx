@@ -3,8 +3,8 @@ import axios from 'axios';
 import $ from 'jquery';
 import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS
 import 'datatables.net'; // Import DataTables
-import Layout from '../Layout/Layout'
-import ModalForm from '../components/ModalForm';
+import Layout from '../../Layout/UserLayout'
+import ModalForm from '../../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
@@ -18,7 +18,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 
-const Pengeluaran = () => {
+const PengeluaranUser = () => {
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");
@@ -115,7 +115,7 @@ const Pengeluaran = () => {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:8081/pengeluaran')
+        axios.get('http://localhost:8081/pengeluaran-user')
             .then(res => {
                 if(res.data.status === "Success") {
                     setAuth(true)
@@ -137,34 +137,7 @@ const Pengeluaran = () => {
                                     return formattedNominal;
                                 } },
                                 { title: 'Keterangan', data: 'Keterangan'},
-                                {
-                                    title: 'Aksi',
-                                    render: function (data, type, row, meta) {
-                                        console.log("Row Data:", row); // Log the entire row to inspect its structure
-                                        const id = row && row.ID; // Check if row is defined before accessing ID
-                                        const nominal = row && row.Nominal; // Check if row is defined before accessing ID
-                                        const keterangan = row && row.Keterangan; // Check if row is defined before accessing ID
-                                        console.log("ID:", id); // Log the extracted ID
-                                        const actionButtons = (
-                                            <div>
-                                              <button
-                                                className='btn btn-outline-warning btn-block btn-flat update-button' data-id={id} data-nominal = {nominal} data-keterangan = {keterangan}
-                                              >
-                                                <FaEdit />
-                                              </button>
-                                              <span style={{ marginRight: '8px' }}></span>
-                                              <button
-                                                className='btn btn-outline-danger btn-block btn-flat delete-button' data-id={id}
-                                              >
-                                                <MdDelete />
-                                              </button>
-            
-                                            </div>
-                                          );
-                                      
-                                          return renderToStaticMarkup(actionButtons);
-                                    },
-                                },
+                                
                             ],
                         });
                         const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
@@ -187,9 +160,9 @@ const Pengeluaran = () => {
                     }
                 }else {
                     setAuth(false)
-                Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
-                    navigate(-1)
-                });
+                    Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
+                        navigate(-1)
+                    });
                 }
             })
             .catch(err => console.log(err));
@@ -269,11 +242,6 @@ const Pengeluaran = () => {
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between">
                     <h1 className="text-xl font-bold text-main-orange">Pengeluaran</h1>
-                    
-                    <button className="bg-main-orange flex items-center gap-1 text-[#FFFFFF] px-3 py-1 rounded-md" onClick={handleAddModal}>
-                        <FaCirclePlus />
-                        <p className="text-xs hidden xs:block">Tambah pengeluaran</p>
-                    </button>
                 </div>  
 
                 <div className="bg-[#FFFFFF] text-left border border-main-orange rounded-md overflow-hidden">
@@ -285,7 +253,6 @@ const Pengeluaran = () => {
                                         <th scope="col" className="whitespace-nowrap px-2 text-center align-middle ">No</th>
                                         <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Nominal</th>
                                         <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Keterangan</th>
-                                        <th scope="col" className="whitespace-nowrap px-3 text-center align-middle ">Aksi</th>
                                     </tr>
                                 </thead>
 
@@ -373,4 +340,4 @@ const Pengeluaran = () => {
   )
 }
 
-export default Pengeluaran
+export default PengeluaranUser

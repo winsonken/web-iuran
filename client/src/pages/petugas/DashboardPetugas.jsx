@@ -31,7 +31,7 @@ const DashboardPetugas = () => {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:8081/dashboard')
+        axios.get('http://localhost:8081/dashboard-petugas')
         .then(res => {
             if(res.data.status === "Success") {
                 setAuth(true)
@@ -77,8 +77,8 @@ const DashboardPetugas = () => {
 
             } else {
                 setAuth(false)
-                Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
-                    navigate('/login')
+                Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
+                    navigate(-1)
                 });
             }
         })

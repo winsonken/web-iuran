@@ -44,7 +44,7 @@ const IuranPetugas = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        navigate(`/iuran/${Month}/${Year}`);
+        navigate(`/iuran-petugas/${Month}/${Year}`);
         setShowModal(!showModal);
         axios.post(`http://localhost:8081/iuran/${Month}/${Year}`, {nama, month, year, date, nominal})
         .then(res => {
@@ -341,7 +341,7 @@ const IuranPetugas = () => {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:8081/iuran/${Month}/${Year}`)
+        axios.get(`http://localhost:8081/iuran-petugas/${Month}/${Year}`)
             .then(res => {
                 if(res.data.status === "Success") {
                     setAuth(true)
@@ -493,8 +493,8 @@ const IuranPetugas = () => {
                     }
                 }else {
                     setAuth(false)
-                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
-                        navigate('/login')
+                    Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
+                        navigate(-1)
                     });
                 }
             })
@@ -657,7 +657,7 @@ const IuranPetugas = () => {
             </ModalForm>
             </div>
                     :
-                    <div></div>
+                    <div>asdasd</div>
                        }
         </PetugasLayout>
 

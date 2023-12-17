@@ -27,7 +27,7 @@ const TahunPetugas = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        navigate(`/tahun/${id}`);
+        navigate(`/tahun-petugas/${id}`);
         setShowModal(!showModal);
         axios.post(`http://localhost:8081/tahun/${id}`, {month, year})
         .then(res => {
@@ -39,7 +39,7 @@ const TahunPetugas = () => {
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:8081/tahun/${id}`)
+        axios.get(`http://localhost:8081/tahun-petugas/${id}`)
         .then(res => {
             if(res.data.status === "Success") {
                 setAuth(true)
@@ -68,7 +68,7 @@ const TahunPetugas = () => {
                                 bulan = row.bulan; // replace 'id' with the actual field name from your data
                                 tahun = row.tahun; // replace 'tahun' with the actual field name from your data
                                 return `
-                                    <a href="/iuran/${bulan}/${tahun}">Open</a>
+                                    <a href="/iuran-petugas/${bulan}/${tahun}">Open</a>
                                 `;
                             },},
                             {
@@ -110,8 +110,8 @@ const TahunPetugas = () => {
                 }
             }else {
                 setAuth(false)
-                Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
-                    navigate('/login')
+                Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
+                    navigate(-1)
                 });
             }
         })

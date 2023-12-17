@@ -17,13 +17,13 @@ const UserLogin = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    axios.post('http://localhost:8081/login/', { user, password })
+    axios.post('http://localhost:8081/user-login/', { user, password })
       .then(res => {
         console.log(res);
         setMessage(res.data.message);
         if (res.data.status === 'success') {
           Swal.fire('Berhasil', 'Akun berhasil Login', 'success').then(() => {
-            navigate('/dashboard-admin');
+            navigate('/dashboard-user');
           });
         } else {
           Swal.fire('Gagal', res.data.message, 'error');

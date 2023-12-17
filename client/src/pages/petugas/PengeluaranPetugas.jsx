@@ -115,7 +115,7 @@ const PengeluaranPetugas = () => {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:8081/pengeluaran')
+        axios.get('http://localhost:8081/pengeluaran-petugas')
             .then(res => {
                 if(res.data.status === "Success") {
                     setAuth(true)
@@ -187,9 +187,9 @@ const PengeluaranPetugas = () => {
                     }
                 }else {
                     setAuth(false)
-                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
-                        navigate('/login')
-                    });
+                Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
+                    navigate(-1)
+                });
                 }
             })
             .catch(err => console.log(err));

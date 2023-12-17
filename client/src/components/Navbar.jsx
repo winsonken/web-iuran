@@ -18,14 +18,25 @@ const Navbar = (props) => {
     axios.get('http://localhost:8081/logout')
     .then(res => {
       Swal.fire('Berhasil', 'Akun anda sudah ter-logout', 'success').then(() => {
-        navigate('/login')
+        navigate('/')
     });
     }). catch(err => console.log(err));
   }
   useEffect(() => {
-      axios.get('http://localhost:8081/dashboard')
+      axios.get('http://localhost:8081/dashboard-admin')
           .then(res => setName(res.data.name))
           .catch(err => console.log(err));
+}, []);
+useEffect(() => {
+  axios.get('http://localhost:8081/dashboard-user')
+      .then(res => setName(res.data.name))
+      .catch(err => console.log(err));
+}, []);
+
+useEffect(() => {
+  axios.get('http://localhost:8081/dashboard-petugas')
+      .then(res => setName(res.data.name))
+      .catch(err => console.log(err));
 }, []);
   return (
     <div className={`bg-[#FFFFFF] p-3 z-10 flex justify-end fixed right-0 border-b-2 border-[#E8E8E8] duration-300 ${props.menuOpen ? "w-[calc(100%-50px)]" : "w-[calc(100%-50px)] md:w-[calc(100%-20%)]"}`}>

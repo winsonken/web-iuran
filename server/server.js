@@ -28,7 +28,7 @@ const verifyUser = (req, res, next) => {
     if(!token) {
         return res.json({Error: "You are not Auth"});
     } else {
-        jwt.verify(token, "jwtsecretkey", (err, decoded) => {
+        jwt.verify(token, "jwtsecretkeyadmin", (err, decoded) => {
             if (err) {
                 return res.json({Error: "Token is not correct"});
             } else {
@@ -39,7 +39,57 @@ const verifyUser = (req, res, next) => {
     }
 }
 
-app.get('/dashboard', verifyUser, (req, res) => {
+const verifyUseruser = (req, res, next) => {
+    const token = req.cookies.token;
+    if(!token) {
+        console.log("gagal");
+        return res.json({Error: "You are not Auth"});
+    } else {
+        jwt.verify(token, "jwtsecretkeyuser", (err, decoded) => {
+            if (err) {
+                return res.json({Error: "Token is not correct"});
+            } else {
+                req.name = decoded.name;
+                next();
+            }
+        })
+    }
+}
+
+const verifyUserpetugas = (req, res, next) => {
+    const token = req.cookies.token;
+    if(!token) {
+        console.log("gagal");
+        return res.json({Error: "You are not Auth"});
+    } else {
+        jwt.verify(token, "jwtsecretkeypetugas", (err, decoded) => {
+            if (err) {
+                return res.json({Error: "Token is not correct"});
+            } else {
+                req.name = decoded.name;
+                next();
+            }
+        })
+    }
+}
+
+app.get('/dashboard-admin', verifyUser, (req, res) => {
+    const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success", name: req.name,data });
+    })
+})
+
+app.get('/dashboard-user', verifyUseruser, (req, res) => {
+    const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success", name: req.name,data });
+    })
+})
+
+app.get('/dashboard-petugas', verifyUserpetugas, (req, res) => {
     const sql = "SELECT * FROM datalaporan WHERE Status = 'On Going' AND Expired = 'NONE'";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
@@ -55,13 +105,21 @@ app.get("/data-warga", verifyUser, (req,res) => {
     })
 })
 
+app.get("/data-warga-petugas", verifyUserpetugas, (req,res) => {
+    const sql = "SELECT * FROM datawarga";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success",data });
+    })
+})
+
 app.get('/logout', (req, res) => {
     res.clearCookie('token');
     return res.json({status: "Success"});
 })
 
-app.post('/login', (req, res) => {
-    const sql = "SELECT * FROM datapetugas WHERE IDuser = ?";
+app.post('/admin-login', (req, res) => {
+    const sql = "SELECT * FROM dataadmin WHERE IDuser = ?";
     db.query(sql, [req.body.user], async (err, data) => {
         if (err) {
             return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
@@ -75,7 +133,7 @@ app.post('/login', (req, res) => {
             
                 if (passwordMatch) {
                     const name = data[0].Nama;
-                    const token = jwt.sign({name}, "jwtsecretkey", {expiresIn : '1d'});
+                    const token = jwt.sign({name}, "jwtsecretkeyadmin", {expiresIn : '1d'});
                     res.cookie('token', token);
                     return res.json({ status: 'success', message: 'Login Berhasil' });
                 } else {
@@ -90,6 +148,69 @@ app.post('/login', (req, res) => {
         }
     });
 });
+
+app.post('/user-login', (req, res) => {
+    const sql = "SELECT * FROM datauser WHERE IDuser = ?";
+    db.query(sql, [req.body.user], async (err, data) => {
+        if (err) {
+            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+        }
+
+        if (data.length > 0) {
+            const storedPassword = data[0].Password;
+
+            try {
+                const passwordMatch = await bcrypt.compare(req.body.password, storedPassword);
+            
+                if (passwordMatch) {
+                    const name = data[0].Nama;
+                    const token = jwt.sign({name}, "jwtsecretkeyuser", {expiresIn : '1d'});
+                    res.cookie('token', token);
+                    return res.json({ status: 'success', message: 'Login Berhasil' });
+                } else {
+                    return res.status(401).json({ status: 'error', message: 'Password Salah' });
+                }
+            } catch (error) {
+                console.error('Error comparing passwords:', error);
+                return res.status(401).json({ status: 'error', message: 'Password Comparison Error' });
+            }
+        } else {
+            return res.status(401).json({ status: 'error', message: 'Akun tidak Terdaftar' });
+        }
+    });
+});
+
+app.post('/petugas-login', (req, res) => {
+    const sql = "SELECT * FROM datapetugas WHERE IDuser = ?";
+    db.query(sql, [req.body.user], async (err, data) => {
+        if (err) {
+            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+        }
+
+        if (data.length > 0) {
+            const storedPassword = data[0].Password;
+
+            try {
+                const passwordMatch = await bcrypt.compare(req.body.password, storedPassword);
+            
+                if (passwordMatch) {
+                    const name = data[0].Nama;
+                    const token = jwt.sign({name}, "jwtsecretkeypetugas", {expiresIn : '1d'});
+                    res.cookie('token', token);
+                    return res.json({ status: 'success', message: 'Login Berhasil' });
+                } else {
+                    return res.status(401).json({ status: 'error', message: 'Password Salah' });
+                }
+            } catch (error) {
+                console.error('Error comparing passwords:', error);
+                return res.status(401).json({ status: 'error', message: 'Password Comparison Error' });
+            }
+        } else {
+            return res.status(401).json({ status: 'error', message: 'Akun tidak Terdaftar' });
+        }
+    });
+});
+
 
 
 
@@ -164,6 +285,22 @@ app.get("/", (req,res) => {
 // })
 
 app.get("/pengeluaran",verifyUser, (req,res) => {
+    const sql = "SELECT * FROM datapengeluaran";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success", data });
+    })
+})
+
+app.get("/pengeluaran-petugas",verifyUserpetugas, (req,res) => {
+    const sql = "SELECT * FROM datapengeluaran";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success", data });
+    })
+})
+
+app.get("/pengeluaran-user",verifyUseruser, (req,res) => {
     const sql = "SELECT * FROM datapengeluaran";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
@@ -351,7 +488,28 @@ app.get("/iuran/:bulan/:tahun/:id", verifyUser, (req, res) => {
     });
 });
 
+app.get("/iuran-petugas/:bulan/:tahun/:id", verifyUserpetugas, (req, res) => {
+    const sql = "SELECT * FROM datawarga WHERE ID = ?";
+    const id = req.params.id;
+
+    db.query(sql, [id], (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        return res.json({status : "Success", data });
+    });
+});
+
 app.get("/laporan", verifyUser, (req,res) => {
+    const sql = "SELECT * FROM year";
+    db.query(sql, (err,data) => {
+        if(err) return res.json("Err");
+        return res.json({status : "Success",data });
+    })
+})
+
+app.get("/laporan-petugas", verifyUserpetugas, (req,res) => {
     const sql = "SELECT * FROM year";
     db.query(sql, (err,data) => {
         if(err) return res.json("Err");
@@ -377,7 +535,41 @@ app.get('/tahun/:id', verifyUser, (req, res) => {
     });
 });
 
+app.get('/tahun-petugas/:id', verifyUserpetugas, (req, res) => {
+    const id = req.params.id;
+
+    const sql = `
+        SELECT m.*
+        FROM month m
+        JOIN year y ON m.tahun = y.ID
+        WHERE y.ID = ?
+        ORDER BY m.ID ASC;
+    `;
+
+    db.query(sql, [id], (err, data) => {
+        if(err) return res.json("Err");
+        console.log("Data retrieved from the database:", data);
+        return res.json({status : "Success", data });
+    });
+});
+
 app.get("/iuran/:bulan/:tahun", verifyUser, (req, res) => {
+    const Month = req.params.bulan;
+    const Year = req.params.tahun;
+
+    const sql = "SELECT * FROM datalaporan WHERE Month = ? AND Year = ?";
+
+    db.query(sql, [Month, Year], (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        console.log("SQL Query:", sql);
+        return res.json({status : "Success", data });
+    });
+});
+
+app.get("/iuran-petugas/:bulan/:tahun", verifyUserpetugas, (req, res) => {
     const Month = req.params.bulan;
     const Year = req.params.tahun;
 

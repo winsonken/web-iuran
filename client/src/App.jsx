@@ -10,15 +10,13 @@ import Datapetugas from './pages/Datapetugas'
 import Datawarga from './pages/Datawarga'
 import Iuran from './pages/Iuran'
 import DashboardUser from './pages/user/DashboardUser'
-import LaporanUser from './pages/user/LaporanUser'
+import PengeluaranUser from './pages/user/PengeluaranUser'
 import DashboardPetugas from './pages/petugas/DashboardPetugas'
 import LaporanPetugas from './pages/petugas/LaporanPetugas'
 import PengeluaranPetugas from './pages/petugas/PengeluaranPetugas'
 import DatawargaPetugas from './pages/petugas/DatawargaPetugas'
 import TahunPetugas from './pages/petugas/TahunPetugas'
 import IuranPetugas from './pages/petugas/IuranPetugas'
-import TahunUser from './pages/user/TahunUser'
-import IuranUser from './pages/user/IuranUser'
 import UserLogin from './pages/UserLogin'
 import PetugasLogin from './pages/PetugasLogin'
 
@@ -54,10 +52,7 @@ function App() {
 
 
           <Route path="/dashboard-user" element={<DashboardUser />} />
-          <Route path="/laporan-user" element={<LaporanUser />} />
-          <Route path="/tahun-user/:id" element={<TahunUser />} />
-          <Route path="/iuran-user/:Month/:Year" element={<IuranUser />} />
-          <Route path="/iuran-user/:Month/:Year/:id" element={<IuranUser />} />
+          <Route path="/pengeluaran-user" element={<PengeluaranUser />} />
 
         </Routes>
       </BrowserRouter>

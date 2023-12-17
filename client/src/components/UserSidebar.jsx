@@ -13,8 +13,8 @@ const sideMenu = [
         "icon": <AiOutlineDashboard />
     },
     {
-        "name": "Laporan",
-        "link": "/laporan-user",
+        "name": "Pengeluaran",
+        "link": "/pengeluaran-user",
         "icon": <IoDocumentText />
     }
 ];

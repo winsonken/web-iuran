@@ -166,7 +166,7 @@ const DatawargaPetugas = () => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:8081/data-warga')
+        axios.get('http://localhost:8081/data-warga-petugas')
             .then(res => {
                 if(res.data.status === "Success") {
                     setAuth(true)
@@ -255,8 +255,8 @@ const DatawargaPetugas = () => {
                     }
                 } else {
                     setAuth(false)
-                    Swal.fire('Gagal', 'Silahkan Login Terlebih Dahulu', 'error').then(() => {
-                        navigate('/login')
+                    Swal.fire('Gagal', 'Kamu Tidak Memiliki Authentikasi', 'error').then(() => {
+                        navigate(-1)
                     });
                 }
             })
