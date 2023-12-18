@@ -77,16 +77,10 @@ const PetugasLogin = () => {
 
           <p>atau login sebagai</p>
 
-          <div className="flex justify-between p-3 w-full gap-x-1">
+          <div className="flex justify-center p-3 w-full gap-x-3">
            <Link to="/user-login" className="w-1/3">
               <div className="flex justify-center bg-main-orange py-2 rounded-sm text-[#FFFFFF] text-sm">
                 User
-              </div>
-            </Link>
-
-            <Link to="/petugas-login" className="w-1/3">
-              <div className="flex justify-center bg-main-orange py-2 rounded-sm text-[#FFFFFF] text-sm">
-                Petugas
               </div>
             </Link>
 
