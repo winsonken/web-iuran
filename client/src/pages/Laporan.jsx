@@ -14,6 +14,10 @@ import Swal from 'sweetalert2';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 const Laporan = () => {
+    useEffect(() => {
+        document.title = "Laporan"
+      }, []);
+
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");
     const [tahun, setTahun] = useState(0);

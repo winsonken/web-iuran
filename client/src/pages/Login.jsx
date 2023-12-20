@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import loginImage from '../assets/login-img.jpg'
 import loginLogo from '../assets/login-logo.png'
 import { Link, useNavigate } from 'react-router-dom'
@@ -8,6 +8,10 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
+  useEffect(() => {
+    document.title = "Admin Login"
+  }, []);
+
   const [user, setUser] = useState ('');
   const [password, setPassword] = useState ('');
   const navigate = useNavigate();

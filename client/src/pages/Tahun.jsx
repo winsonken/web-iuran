@@ -14,6 +14,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 const Tahun = () => {
+    useEffect(() => {
+        document.title = "Laporan Tahunan"
+      }, []);
+
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");
     const [bulan, setBulan] = useState(0);

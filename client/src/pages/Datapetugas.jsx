@@ -17,6 +17,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 
 const Datapetugas = () => {
+    useEffect(() => {
+        document.title = "Data Petugas"
+      }, []);
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     // Set Modal Type

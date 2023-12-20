@@ -19,6 +19,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 
 const Datawarga = () => {
+    useEffect(() => {
+        document.title = "Data Warga"
+      }, []);
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     // Set Modal Type

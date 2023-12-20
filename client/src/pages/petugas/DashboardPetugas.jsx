@@ -13,6 +13,10 @@ import Swal from 'sweetalert2';
 
 
 const DashboardPetugas = () => {
+    useEffect(() => {
+        document.title = "Dashboard Petugas"
+      }, []);
+
     const [warga, setWarga] = useState([]);
     const [jumlahWarga, setJumlahWarga] = useState(0);
     const [jumlahPetugas, setJumlahPetugas] = useState(0);

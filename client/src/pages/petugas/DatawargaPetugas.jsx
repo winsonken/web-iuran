@@ -18,6 +18,9 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 const DatawargaPetugas = () => {
+    useEffect(() => {
+        document.title = "Data warga"
+      }, []);
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     // Set Modal Type

@@ -19,6 +19,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 
 const PengeluaranPetugas = () => {
+    useEffect(() => {
+        document.title = "Pengeluaran"
+      }, []);
+
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");

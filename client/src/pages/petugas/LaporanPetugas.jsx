@@ -15,6 +15,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 
 const LaporanPetugas = () => {
+    useEffect(() => {
+        document.title = "Laporan"
+      }, []);
+
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState("");
     const [tahun, setTahun] = useState(0);

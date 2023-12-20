@@ -12,6 +12,10 @@ import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
 
 const Dashboard = () => {
+    useEffect(() => {
+        document.title = "Admin Login"
+      }, []);
+
     const [warga, setWarga] = useState([]);
     const [jumlahWarga, setJumlahWarga] = useState(0);
     const [jumlahPetugas, setJumlahPetugas] = useState(0);

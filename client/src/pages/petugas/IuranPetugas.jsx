@@ -20,6 +20,10 @@ import { RiPassExpiredFill } from "react-icons/ri";
 import { MdCancel } from "react-icons/md";
 
 const IuranPetugas = () => {
+    useEffect(() => {
+        document.title = "Iuran Bulanan"
+      }, []);
+
     // Show or Hide Modal
     const [showModal, setShowModal] = useState(false);
     // Set Modal Type
