@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import loginImage from '../assets/login-img.jpg'
 import loginLogo from '../assets/login-logo.png'
 import { Link, useNavigate } from 'react-router-dom'
@@ -8,6 +8,10 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UserLogin = () => {
+  useEffect(() => {
+    document.title = "User Login"
+  }, []);
+
   const [user, setUser] = useState ('');
   const [password, setPassword] = useState ('');
   const navigate = useNavigate();
@@ -31,7 +35,7 @@ const UserLogin = () => {
       })
       .catch(err => {
         console.log(err);
-        Swal.fire('Gagal', 'Terjadi Kesalahan pada Login' , 'error');
+        Swal.fire('Gagal', 'ID atau Password salah' , 'error');
       });
   }
 
@@ -52,7 +56,7 @@ const UserLogin = () => {
               <h1 className="text-main-orange font-bold text-base xs:text-xl">Iuranku</h1>
             </div>
             
-            <h1 className="text-main-orange font-bold text-xl">Login user</h1>
+            <h1 className="text-main-orange font-bold text-xl">Masuk sebagai user</h1>
           </div>
 
           <div className="flex w-full">
@@ -75,15 +79,9 @@ const UserLogin = () => {
             </form>
           </div>
 
-          <p>atau login sebagai</p>
+          <p>atau masuk sebagai</p>
 
-          <div className="flex justify-between p-3 w-full gap-x-1">
-           <Link to="/user-login" className="w-1/3">
-              <div className="flex justify-center bg-main-orange py-2 rounded-sm text-[#FFFFFF] text-sm">
-                User
-              </div>
-            </Link>
-
+          <div className="flex justify-center p-3 w-full gap-x-3">
             <Link to="/petugas-login" className="w-1/3">
               <div className="flex justify-center bg-main-orange py-2 rounded-sm text-[#FFFFFF] text-sm">
                 Petugas
