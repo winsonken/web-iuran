@@ -35,7 +35,7 @@ const Login = () => {
       })
       .catch(err => {
         console.log(err);
-        Swal.fire('Gagal', 'Terjadi Kesalahan pada Login' , 'error');
+        Swal.fire('Gagal', 'ID atau Password salah' , 'error');
       });
   }
 
@@ -56,7 +56,7 @@ const Login = () => {
               <h1 className="text-main-orange font-bold text-base xs:text-xl">Iuranku</h1>
             </div>
             
-            <h1 className="text-main-orange font-bold text-xl">Login admin</h1>
+            <h1 className="text-main-orange font-bold text-xl">Masuk sebagai admin</h1>
           </div>
 
           <div className="flex w-full">
@@ -79,7 +79,7 @@ const Login = () => {
             </form>
           </div>
 
-          <p>atau login sebagai</p>
+          <p>atau masuk sebagai</p>
 
           <div className="flex justify-center p-3 w-full gap-x-3">
            <Link to="/user-login" className="w-1/3">

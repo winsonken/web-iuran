@@ -10,6 +10,7 @@ import 'datatables.net'; // Import DataTables
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
+import 'datatables.net'; // DataTables library
 
 const Dashboard = () => {
     useEffect(() => {
@@ -41,42 +42,41 @@ const Dashboard = () => {
                 setName(res.data.name)
                 setWarga(res.data.data)
                 let counter = 1;
-        if (tableRef.current) {
-            $(tableRef.current).DataTable({
-                destroy: true, // Destroy any existing DataTable instance
-                data: res.data.data,
-                scrollX: false, // Disable horizontal scrolling
-                autoWidth: false,
-                columns: [
-                    { title: 'No', render: function (data, type, row, meta) { // Langkah 2: Tambahkan kolom nomor urut
-                        return counter++;
-                    } },
-                    { title: 'Nama Perwakilan', data: 'Nama'},
-                    { title: 'Status', data: 'Status'},
-                ],
-                createdRow: function (row, data, dataIndex) {
-                    // Set text color based on the "Status" value
-                    const status = data.Status;
-                    const statusCell = $('td:eq(2)', row); // Change 4 to the correct index of the "Status" column
-    
-                    if (status === 'Lunas') {
-                        statusCell.css('color', '#4FAC16'); // Set text color to green
-                        statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
-                    } else if (status === 'On Going') {
-                        statusCell.css('color', 'red'); // Set text color to red
-                        // You might want to remove the custom class if status is not "Active"
-                        statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Belum Lunas</span>`);
-                    }
-                },
-            });
-            const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
-            searchInput.css('margin-bottom', '10px'); // Adjust the margin as needed
-            searchInput.css({
-                'text-align': 'left',
-                'margin-right': '3px', // Optional: Adjust the margin as needed
-                'width': '200px' // Optional: Adjust the width as needed
-            });
-        }
+                if (tableRef.current) {
+                    $(tableRef.current).DataTable({
+                        destroy: true, // Destroy any existing DataTable instance
+                        data: res.data.data,
+                        scrollX: false, // Disable horizontal scrolling
+                        autoWidth: false,
+                        columns: [
+                            { title: 'No', render: function (data, type, row, meta) {
+                                return counter++;
+                            } },
+                            { title: 'Nama Perwakilan', data: 'Nama'},
+                            { title: 'Status', data: 'Status'},
+                        ],
+                        createdRow: function (row, data, dataIndex) {
+                            const status = data.Status;
+                            const statusCell = $('td:eq(2)', row);
+                
+                            if (status === 'Lunas') {
+                                statusCell.css('color', '#4FAC16');
+                                statusCell.html(`<span class="bg-[#DCFDD4] text-[#4FAC16] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Lunas</span>`);
+                            } else if (status === 'On Going') {
+                                statusCell.css('color', 'red');
+                                statusCell.html(`<span class="bg-[#FDD4D4] text-[#AC1616] px-4 py-1 rounded-full" style="width: 130px; display: inline-block;">Belum Lunas</span>`);
+                            }
+                        },
+                    });
+                
+                    const searchInput = $(tableRef.current).closest('.dataTables_wrapper').find('input[type="search"]');
+                    searchInput.css('margin-bottom', '10px');
+                    searchInput.css({
+                        'text-align': 'left',
+                        'margin-right': '3px',
+                        'width': '200px'
+                    });
+                }
 
             } else {
                 setAuth(false)
@@ -194,7 +194,7 @@ const Dashboard = () => {
         auth ?
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">
-                <h1 className="text-xl font-bold text-main-orange">Admin Dashboard</h1>
+                <h1 className="text-xl font-bold text-main-orange">Dashboard Admin</h1>
 
                 <div className="flex gap-3 justify-center lg:justify-between flex-wrap w-full h-100">
                     <div className="bg-[#FFFFFF] flex grow flex-row justify-center items-center gap-5 w-full h-fit xs:h-[70px] sm:h-[80px] p-1 rounded-sm sm:basis-64 lg:basis-1/3">

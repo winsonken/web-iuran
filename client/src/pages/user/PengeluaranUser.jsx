@@ -103,7 +103,7 @@ const PengeluaranUser = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        navigate("/pengeluaran");
+        navigate("/pengeluaran-user");
         setShowModal(!showModal);
         axios.post('http://localhost:8081/pengeluaran', {nominal, keterangan})
         .then(res => {

@@ -127,7 +127,7 @@ const DatawargaPetugas = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        navigate("/data-warga");
+        navigate("/data-warga-petugas");
         setShowModal(!showModal);
         axios.post('http://localhost:8081/data-warga', {kk, nama, alamat, status})
         .then(res => {
