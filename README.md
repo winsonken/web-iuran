@@ -1,11 +1,11 @@
-- User login:
+1. User login:
 Name: userlogin
 Password: userlogin123
 
-- Petugas login:
+2. Petugas login:
 Name: william
 Password: 12345
 
-- Admin login:
+3. Admin login:
 Name: admin
 Password: admin
